@@ -112,6 +112,18 @@ Measured on the finished layouts (drawn geometry, not bounding boxes):
 desktop clears the plates by ~99px and ~101px, the phone by ~31px, with no
 shape overlapping another on either.
 
+## Filling the white space
+
+On the phone the triangle isn't placed by hand: `emptiestPoint()` sweeps
+the visible frame after the other shapes have settled and drops it at the
+point furthest from every shape and from both plates, so it lands in
+whatever gap the composition leaves. The search is confined to the
+visible frame — off-screen corners are trivially "empty" and would just
+banish the shape out of sight.
+
+The desktop home keeps the exact Figma composition, triangle included;
+only the plate spacing is adjusted there.
+
 ## Home always fits
 
 The home screen is a fixed composition — 1440 x 1060 on desktop,

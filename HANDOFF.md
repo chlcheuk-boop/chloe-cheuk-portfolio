@@ -1,7 +1,7 @@
 # Chloe Cheuk portfolio — handoff
 
 Everything needed to continue in a fresh chat. The site is complete and
-working; one task is in flight (see **Next task**).
+working; the triangle-placement task is done and verified (see below).
 
 **Location:** `~/Documents/chloe-cheuk-portfolio`
 **Run it:** `python3 serve.py` then open <http://127.0.0.1:4173>
@@ -109,32 +109,46 @@ Measured in-browser, drawn geometry (not bounding boxes):
 - Contact desktop: 11 triangles, 0 real overlaps.
 - Nav hover italic works; current page italic via `aria-current`.
 
-## Next task (in flight, NOT verified)
+## Triangle placement — done and verified
 
-The user's last request: **the iPad and iPhone home screens should be near
-1:1 replicas of two supplied screenshots.** Both show the same composition:
+On the phone the triangle is no longer placed by hand: the other shapes
+settle first, then `emptiestPoint()` sweeps the visible frame and drops
+the triangle at the point furthest from every shape and from both plates.
+The search is confined to the frame — off-screen corners are trivially
+"empty" and would just banish the shape out of sight. Desktop keeps the
+exact Figma composition, triangle included.
+
+`emptiestPoint()` clamps its inset to half the frame and falls back to the
+centre. Without that it returned `null` whenever the frame was smaller
+than two insets — including a layer with no layout yet at first paint —
+and the `spot.x` read threw, killing `init()` and leaving a blank page
+with no shapes, no intro and no hover tags. Verified: a normal frame
+returns the identical point it always did; zero-width, zero-size and
+40x40 frames now return a point instead of `null`.
+
+Verified in-browser after the fix: all four pages render with no console
+errors at 1440x900, and the phone home at 375x812 shows the triangle
+large at centre-left.
+
+## Still open — iPad / iPhone 1:1 replica
+
+The user's earlier request was that **the iPad and iPhone home screens be
+near 1:1 replicas of two supplied screenshots**. The adaptive placement
+above satisfies the "triangle centre-left, clearly visible and large" part
+of that, but the rest was never matched pixel-for-pixel. The screenshots
+show:
 
 - Tilted `Chloe Cheuk` plate upper-left, rotated ~-20°/-24°.
 - Purple starburst top-left bleeding off the corner; teal circle top-right
-  bleeding off; large starburst mid-right; **tan triangle centre-left,
-  clearly visible and large** — on the iPad shot it is a big triangle in
-  the middle-left, apex up, sitting between the name plate and the nav box.
+  bleeding off; large starburst mid-right.
 - Tilted nav square (`contact / about me / work`) lower-centre-right.
 - Teal circle bottom-left and starburst bottom-right, both bleeding off.
 
-Immediately before this, the user asked to **move the triangle to fill more
-white space (mobile and web)**. An adaptive change was written into
-`paintVectors()` — it places all shapes *except* the triangle, then drops
-the triangle at `emptiestPoint()` — but it was **never rendered or
-verified**. Check it first; if it misbehaves, the fallback is to hardcode
-the triangle position in `HOME_MOBILE` / `HOME_FIGMA` to match the
-screenshots.
+**Open question:** the screenshots show **three** nav items; the site has
+**four** (`home` was added when the user asked that every page link to
+every page). Confirm which they want before matching pixel-for-pixel.
 
-Note the screenshots show **three** nav items; the site has **four**
-(`home` was added when the user asked that every page link to every page).
-Confirm which they want before matching pixel-for-pixel.
-
-## Still open
+## Also open
 
 - `Read My CV Here` (about) and all nine work tile links point at `#`.
 - Fonts load from Google Fonts.

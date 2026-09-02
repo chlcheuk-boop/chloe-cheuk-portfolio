@@ -344,10 +344,16 @@
   /* Find the most open point in the layer — the spot furthest from every
      already-placed shape and from the plates. Used to drop the triangle
      into whatever white space the rest of the composition leaves. */
-  function emptiestPoint(items, rects, W, H, bleed) {
+  function emptiestPoint(items, rects, W, H, inset) {
+    /* Search only inside the visible frame — off-screen corners are
+       trivially "empty" and would just banish the shape out of sight.
+       Clamp the inset to half the frame first: a frame smaller than two
+       insets (a pane mid-resize, or a layer with no layout yet at first
+       paint) would otherwise leave an empty search box and return null. */
     var best = null, step = 12;
-    for (var x = -bleed; x <= W + bleed; x += step) {
-      for (var y = -bleed; y <= H + bleed; y += step) {
+    var ix = Math.min(inset, W / 2), iy = Math.min(inset, H / 2);
+    for (var x = ix; x <= W - ix; x += step) {
+      for (var y = iy; y <= H - iy; y += step) {
         var m = Infinity, i;
         for (i = 0; i < items.length; i++) {
           var dx = x - items[i].cx, dy = y - items[i].cy;
@@ -360,7 +366,8 @@
         if (!best || m > best.m) best = { x: x, y: y, m: m };
       }
     }
-    return best;
+    /* the centre is the honest fallback if the frame is degenerate */
+    return best || { x: W / 2, y: H / 2, m: 0 };
   }
 
   function paintVectors(page) {
@@ -380,32 +387,34 @@
     var items;
 
     if (page === 'home') {
-      var base, rects, minClear, shapeGap, frameW, frameH;
+      var rects = plateRects(host, u, ['.home-name-plate', '.home-nav-plate']);
+
       if (mob) {
-        frameW = 390; frameH = 806; minClear = 30; shapeGap = 16;
-        base = HOME_MOBILE;
+        /* the mockup composition, centred in the 390 x 806 frame */
+        var mX = (W - 390) / 2, mY = (H - 806) / 2;
+        var rest = HOME_MOBILE.filter(function (it) { return it.s !== 'triangle'; })
+          .map(function (it) {
+            return { s: it.s, cx: it.cx + mX, cy: it.cy + mY, size: it.size, rot: it.rot };
+          });
+        rest = space(rest, rects, 30, 16);
+
+        /* drop the triangle into the largest remaining gap on screen */
+        var triSrc = HOME_MOBILE.filter(function (it) { return it.s === 'triangle'; })[0];
+        if (triSrc) {
+          var spot = emptiestPoint(rest, rects, W, H, triSrc.size * 0.18);
+          rest.push({ s: 'triangle', cx: spot.x, cy: spot.y, size: triSrc.size, rot: triSrc.rot });
+          rest = space(rest, rects, 30, 16);
+        }
+        items = rest;
+
       } else {
-        frameW = 1440; frameH = 1060; minClear = 130; shapeGap = 24;
-        base = HOME_FIGMA;
-      }
-      var oX = (W - frameW) / 2, oY = (H - frameH) / 2;
-      rects = plateRects(host, u, ['.home-name-plate', '.home-nav-plate']);
-
-      /* everything except the triangle, settled against the plates */
-      var rest = base.filter(function (it) { return it.s !== 'triangle'; })
-        .map(function (it) {
-          return { s: it.s, cx: it.cx + oX, cy: it.cy + oY, size: it.size, rot: it.rot };
+        /* the exact Figma composition, with the plates given extra room */
+        var offX = (W - 1440) / 2, offY = (H - 1060) / 2;
+        items = HOME_FIGMA.map(function (it) {
+          return { s: it.s, cx: it.cx + offX, cy: it.cy + offY, size: it.size, rot: it.rot };
         });
-      rest = space(rest, rects, minClear, shapeGap);
-
-      /* then drop the triangle into the largest remaining gap */
-      var triSrc = base.filter(function (it) { return it.s === 'triangle'; })[0];
-      if (triSrc) {
-        var spot = emptiestPoint(rest, rects, W, H, triSrc.size * 0.45);
-        rest.push({ s: 'triangle', cx: spot.x, cy: spot.y, size: triSrc.size, rot: triSrc.rot });
-        rest = space(rest, rects, minClear, shapeGap);
+        items = space(items, rects, 130, 24);
       }
-      items = rest;
 
     } else if (page === 'contact') {
       if (mob) {
