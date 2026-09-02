@@ -1,0 +1,556 @@
+/* ============================================================
+   Chloe Cheuk — portfolio
+   All metrics taken from the Figma source (1440-wide frame).
+   Colours:  purple #BF7AB8 · teal #7AB6BF · tan #BF947A
+   Plate:    #BF947A at 44% over white, flattened to #E3D0C4
+   Type:     Instrument Serif (headings/nav) · Instrument Sans (body)
+   ============================================================ */
+
+:root{
+  /* 1u = one pixel of the 1440-wide Figma frame. Everything is
+     calc(N * var(--u)), so the design scales up on larger screens and
+     down on smaller ones with every spacing ratio intact. Pure CSS,
+     so it can never fall out of sync with the viewport. */
+  --u: calc(100vw / 1440);
+
+  --white:#FFFFFF;
+  --ink:#000000;
+  --purple:#BF7AB8;
+  --teal:#7AB6BF;
+  --tan:#BF947A;
+  --plate:#E3D0C4;
+  --divider:#D9D9D9;
+
+  --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
+  --sans:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+
+  --radius: calc(17 * var(--u));
+  --header-h: calc(173 * var(--u));
+}
+
+/* The home screen is one fixed composition, so it scales to FIT the
+   window — that keeps the name and the nav fully visible, never scrolled. */
+body[data-page="home"]{
+  --u: min(calc(100vw / 1440), calc(100vh / 1060));
+}
+
+/* The about page drives its photograph and starburst off the available
+   HEIGHT, so the starburst always fills the bottom-right corner and the
+   text column takes whatever width is left over. */
+body[data-page="about"]{
+  /* Height drives the photo and starburst, but never past the width the
+     Figma frame allows — otherwise the photo would squeeze the copy out. */
+  --au: min(calc((100vh - var(--header-h)) / 851), calc(100vw / 1440));
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+html,body{ margin:0; padding:0; }
+
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:var(--sans);
+  overflow-x:hidden;          /* vectors bleed past both edges by design */
+  -webkit-font-smoothing:antialiased;
+}
+
+img{ display:block; max-width:100%; }
+a{ color:inherit; }
+
+/* ---------- decorative vector layer ---------- */
+.vectors{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+.vectors svg{ position:absolute; display:block; }
+
+.page{ position:relative; min-height:100vh; }
+
+/* ---------- header (work / about / contact) ---------- */
+.site-header{
+  position:relative;
+  z-index:2;
+  height:var(--header-h);
+}
+.wordmark{
+  position:absolute;
+  left: calc(67 * var(--u));
+  top:  calc(46 * var(--u));
+  margin:0;
+  font-family:var(--serif);
+  font-weight:400;
+  font-size: calc(128 * var(--u));
+  line-height: calc(166 / 128);
+  white-space:nowrap;
+}
+.wordmark a{ text-decoration:none; }
+
+.nav-plate{
+  position:absolute;
+  left: calc(694 * var(--u));
+  top:  calc(70 * var(--u));
+  width:  calc(678 * var(--u));
+  height: calc(103 * var(--u));
+  background:var(--plate);
+}
+.nav{
+  position:absolute;
+  left: calc(694 * var(--u));
+  top:  calc(89 * var(--u));
+  width: calc(678 * var(--u));
+  display:flex;
+  justify-content:center;
+  gap: calc(44 * var(--u));
+  font-family:var(--serif);
+  font-size: calc(48 * var(--u));
+  line-height: calc(65 / 48);
+}
+.nav a{ text-decoration:none; white-space:nowrap; font-style:normal; }
+/* feature 1 — the page you are on is italicised */
+.nav a[aria-current="page"]{ font-style:italic; }
+/* ...and so is whichever one the cursor is over */
+@media (hover:hover){
+  .nav a:hover, .home-nav a:hover{ font-style:italic; }
+}
+
+/* ---------- shared type ---------- */
+.section-title{
+  margin:0;
+  font-family:var(--serif);
+  font-style:italic;
+  font-weight:400;
+  font-size: calc(48 * var(--u));
+  line-height: calc(62 / 48);
+}
+.body-copy{
+  font-family:var(--sans);
+  font-size: calc(24 * var(--u));
+  /* Figma's copy block is 522u tall for this text: ~30.7u per line */
+  line-height:1.28;
+  font-weight:400;
+}
+
+/* ============================================================
+   HOME  (Figma "Desktop - 1")
+   The plates wrap their own text so they size to their contents,
+   and sit at the Figma origins with the Figma rotations.
+   ============================================================ */
+.home{ height:100vh; overflow:hidden; }
+
+.home-stage{
+  position:absolute;
+  left:50%; top:50%;
+  width:  calc(1440 * var(--u));
+  height: calc(1060 * var(--u));
+  transform: translate(-50%, -50%);
+  z-index:1;
+}
+
+.home-plate{
+  position:absolute;
+  left:0; top:0;
+  transform-origin:0 0;
+  background:var(--plate);
+}
+.home-name-plate{
+  padding: calc(14 * var(--u)) calc(34 * var(--u));
+  transform: translate(calc(823.77 * var(--u)), calc(662 * var(--u))) rotate(18.74deg);
+}
+.home-nav-plate{
+  padding: calc(16 * var(--u)) calc(30 * var(--u));
+  transform: translate(calc(277.65 * var(--u)), calc(631.37 * var(--u))) rotate(-40.70deg);
+}
+.home-name{
+  margin:0;
+  font-family:var(--serif);
+  font-weight:400;
+  font-size: calc(128 * var(--u));
+  line-height: calc(166 / 128);
+  white-space:nowrap;
+}
+.home-nav{
+  display:flex;
+  flex-direction:column;
+  font-family:var(--serif);
+  font-size: calc(48 * var(--u));
+  line-height: calc(65 / 48);
+}
+.home-nav a{ text-decoration:none; white-space:nowrap; font-style:normal; }
+.home-nav a[aria-current="page"]{ font-style:italic; }
+
+/* ============================================================
+   WORK  (Figma "Desktop - 2")
+   ============================================================ */
+.work-wrap{
+  /* One gap, used everywhere: the margin round the grid and the space
+     between every tile are all --gap, so the spacing reads as even on
+     all four sides. Column ratios below are solved for that gap so the
+     tall tile still lines up with the two stacked beside it. */
+  --gap: calc(34 * var(--u));
+  position:relative;
+  z-index:1;
+  margin: 0 var(--gap) var(--gap);
+  padding-top: var(--gap);
+  display:flex;
+  flex-direction:column;
+  gap: var(--gap);
+}
+
+.tile{
+  position:relative;
+  display:block;
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:#f2f2f2;
+  transition:transform .28s cubic-bezier(.22,.61,.36,1),
+             box-shadow .28s cubic-bezier(.22,.61,.36,1);
+  will-change:transform;
+}
+.tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* feature 7 — grow slightly on hover, settle back on leave */
+@media (hover:hover){
+  .tile:hover{
+    transform:scale(1.022);
+    box-shadow:0 calc(10 * var(--u)) calc(34 * var(--u)) rgba(0,0,0,.16);
+    z-index:3;
+  }
+}
+.tile:focus-visible{ outline:calc(3 * var(--u)) solid var(--purple); outline-offset:calc(4 * var(--u)); }
+
+.work-row-split{
+  /* 796.1 : 541.9 makes 1.3811a = 1.9663b + gap, i.e. the tall tile is
+     exactly as high as the two square ones plus the gap between them */
+  display:grid;
+  grid-template-columns: 796.1fr 541.9fr;
+  column-gap: var(--gap);
+  row-gap: var(--gap);
+}
+.work-row-split .tall{ grid-row:1 / span 2; aspect-ratio: 803 / 1109; }
+.work-row-split .sq{ aspect-ratio: 534 / 525; }
+
+.work-row-pair{
+  display:grid;
+  grid-template-columns: 666fr 669fr;
+  column-gap: var(--gap);
+}
+.work-row-pair .tile{ height:100%; }
+.work-row-pair > :nth-child(1){ aspect-ratio: 666 / 862; }
+.work-row-pair > :nth-child(2){ aspect-ratio: 669 / 862; }
+
+.tile-full{ width:100%; }
+.h-bloodondot  { aspect-ratio: 1372 / 1029; }
+.h-sebiowomens { aspect-ratio: 1372 / 771;  }
+.h-sebiocube   { aspect-ratio: 1372 / 1060; }
+.h-glitched    { aspect-ratio: 1372 / 857;  }
+
+/* feature 6 — cursor-following caption. The outer node carries the
+   (untransitioned) translate so it tracks the cursor exactly; the inner
+   node carries the fade + scale. */
+.hover-tag{
+  position:fixed;
+  left:0; top:0;
+  z-index:60;
+  pointer-events:none;
+  will-change:transform;
+}
+.hover-tag__inner{
+  padding: calc(10 * var(--u)) calc(18 * var(--u));
+  background:var(--plate);
+  box-shadow:0 calc(4 * var(--u)) calc(14 * var(--u)) rgba(0,0,0,.18);
+  border-radius: calc(14 * var(--u));
+  font-family:var(--sans);
+  font-size: calc(17 * var(--u));
+  line-height:1.35;
+  color:var(--ink);
+  white-space:nowrap;
+  opacity:0;
+  transform:scale(.94);
+  transform-origin:top left;
+  transition:opacity .16s ease, transform .16s ease;
+}
+.hover-tag.is-visible .hover-tag__inner{ opacity:1; transform:scale(1); }
+.hover-tag b{ font-weight:600; }
+.hover-tag span{ opacity:.72; }
+
+/* ============================================================
+   ABOUT  (Figma "Desktop - 3")
+   The photo is sized from the available height so the starburst always
+   fills the bottom-right corner; the copy column takes the rest of the
+   width, keeping the Figma spacing ratios.
+   ============================================================ */
+.about-grid{
+  position:relative;
+  z-index:1;
+  height: calc(100vh - var(--header-h));
+  overflow:hidden;            /* crops the starburst at the corner, as Figma does */
+}
+
+/* The whole about composition runs off --au (driven by the available
+   height), so the copy always fits beside the photo and every spacing
+   ratio from the Figma frame is preserved. The column takes the width
+   left over next to the photo, up to the Figma's own 624 : 851 ratio. */
+.about-copy-col{
+  /* The column takes the width left beside the photo, capped at the
+     Figma's own 624 : 851 ratio. Type and spacing are then a fixed
+     fraction of that width, so the block keeps exactly the Figma
+     proportions — and therefore always fits the height. */
+  --acol: min(calc(100vw - 810 * var(--au)), calc(624 * var(--au)));
+  position:absolute;
+  left: calc(89 * var(--au));
+  /* anchored to the bottom, so the foot of "Read My CV Here" lines up
+     with the foot of the photograph; the spacing inside the column
+     (heading -> body -> CV link) is untouched */
+  bottom: calc(53 * var(--au));
+  width: var(--acol);
+}
+.about-copy-col .section-title{ font-size: calc(var(--acol) * 48 / 624); }
+.about-copy-col .body-copy{ font-size: calc(var(--acol) * 24 / 624); }
+.about-title{ margin:0; }
+.about-copy{ margin-top: calc(var(--acol) * 26 / 624); }
+.about-copy p{ margin:0 0 calc(var(--acol) * 26 / 624); }
+.about-copy p:last-child{ margin-bottom:0; }
+.about-cv{
+  display:inline-block;
+  margin-top: calc(var(--acol) * 48 / 624);
+  text-decoration:underline;
+  text-underline-offset: calc(var(--acol) * 4 / 624);
+}
+
+.about-photo{
+  /* pinned to the bottom-right, so the starburst hanging off its corner
+     always runs past the bottom-right corner of the page */
+  position:absolute;
+  right:  calc(68 * var(--au));
+  bottom: calc(53 * var(--au));
+  width:  calc(544 * var(--au));
+  height: calc(733 * var(--au));
+}
+.about-photo__frame{ width:100%; height:100%; overflow:hidden; }
+.about-photo img{ width:100%; height:100%; object-fit:cover; }
+
+/* the page's only vector — pinned past the photo's bottom-right corner,
+   so it always runs into the corner of the page */
+.about-star{
+  position:absolute;
+  width: calc(599 * var(--au));
+  height:calc(599 * var(--au));
+  right:  calc(-225 * var(--au));
+  bottom: calc(-268 * var(--au));
+  z-index:2;
+  pointer-events:none;
+}
+
+/* ============================================================
+   CONTACT  (Figma "Desktop - 4")
+   ============================================================ */
+.contact-block{ position:relative; z-index:1; padding-bottom: calc(120 * var(--u)); }
+.contact-title{ margin-left: calc(67 * var(--u)); padding-top: calc(119 * var(--u)); }
+.contact-list{
+  margin: calc(26 * var(--u)) 0 0 calc(73 * var(--u));
+  width: calc(624 * var(--u));
+}
+.contact-list h3{
+  margin:0 0 calc(4 * var(--u));
+  font-family:var(--sans);
+  font-weight:400;
+  font-size: calc(24 * var(--u));
+}
+.contact-list ul{ margin:0 0 calc(26 * var(--u)); padding-left: calc(26 * var(--u)); }
+.contact-list li{ margin-bottom: calc(2 * var(--u)); }
+.contact-list a{ text-decoration:none; }
+.contact-list a:hover{ text-decoration:underline; }
+
+/* ============================================================
+   HOME INTRO
+   Each vector travels in, overshoots its mark, bounces back and
+   settles. On desktop they fall from above; on a phone each one
+   slides in from whichever side it is nearer to.
+   The animation rides on the `translate` property, so the element's
+   own `transform` (its Figma position + rotation) is left intact.
+   ============================================================ */
+.js .home .vectors svg{ opacity:0; }
+
+.home.is-ready .vectors svg{
+  animation-name: vec-fall;
+  animation-duration:1.05s;
+  animation-timing-function: cubic-bezier(.32,0,.24,1);
+  animation-fill-mode: both;
+  animation-delay: var(--d, 0s);
+}
+.home.is-ready .vectors svg[data-from="left"] { animation-name: vec-from-left; }
+.home.is-ready .vectors svg[data-from="right"]{ animation-name: vec-from-right; }
+
+/* once it has played, a repaint (resize) must not replay it */
+.home.intro-done .vectors svg{ animation:none; opacity:1; translate:0 0; }
+
+@keyframes vec-fall{
+  0%   { opacity:0; translate:0 -110vh; }
+  55%  { opacity:1; translate:0 calc(30 * var(--u)); }   /* past the mark */
+  72%  { translate:0 calc(-15 * var(--u)); }             /* bounce back  */
+  86%  { translate:0 calc(6 * var(--u));  }
+  95%  { translate:0 calc(-2 * var(--u)); }
+  100% { opacity:1; translate:0 0; }                     /* settle       */
+}
+@keyframes vec-from-left{
+  0%   { opacity:0; translate:-110vw 0; }
+  55%  { opacity:1; translate:calc(30 * var(--u)) 0; }
+  72%  { translate:calc(-15 * var(--u)) 0; }
+  86%  { translate:calc(6 * var(--u)) 0; }
+  95%  { translate:calc(-2 * var(--u)) 0; }
+  100% { opacity:1; translate:0 0; }
+}
+@keyframes vec-from-right{
+  0%   { opacity:0; translate:110vw 0; }
+  55%  { opacity:1; translate:calc(-30 * var(--u)) 0; }
+  72%  { translate:calc(15 * var(--u)) 0; }
+  86%  { translate:calc(-6 * var(--u)) 0; }
+  95%  { translate:calc(2 * var(--u)) 0; }
+  100% { opacity:1; translate:0 0; }
+}
+
+/* the two plates arrive the same way — name from below, nav from above */
+.js .home .home-plate{ opacity:0; }
+.home.is-ready .home-plate{
+  animation-duration:.9s;
+  animation-timing-function: cubic-bezier(.22,.61,.36,1);   /* ease-out, no overshoot */
+  animation-fill-mode: both;
+}
+.home.is-ready .home-name-plate{ animation-name: rise; animation-delay:.62s; }
+.home.is-ready .home-nav-plate { animation-name: drop; animation-delay:.72s; }
+.home.intro-done .home-plate{ animation:none; opacity:1; translate:0 0; }
+
+/* the plates simply shift into place — no bounce */
+@keyframes rise{
+  from{ opacity:0; translate:0 calc(170 * var(--u)); }
+  to  { opacity:1; translate:0 0; }
+}
+@keyframes drop{
+  from{ opacity:0; translate:0 calc(-170 * var(--u)); }
+  to  { opacity:1; translate:0 0; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .js .home .vectors svg,
+  .js .home .home-plate{ opacity:1; }
+  .home.is-ready .vectors svg,
+  .home.is-ready .home-plate{ animation:none; translate:0 0; }
+  .tile{ transition:none; }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width:1024px){
+  /* 1u tracks a 390-wide phone frame, capped so tablet-width windows
+     don't balloon the type. Widths stay fluid (100%/auto). */
+  :root{ --u: min(calc(100vw / 390), 1.25px); --radius: calc(10 * var(--u)); --header-h:auto; }
+  /* the phone home screen is its own fixed composition, 390 x 780 */
+  body[data-page="home"]{ --u: min(calc(100vw / 390), calc(100vh / 806)); }
+  body[data-page="about"]{ --au: var(--u); }
+
+  /* --- header: nav bar first, name directly beneath it --- */
+  .site-header{
+    height:auto;
+    padding-bottom:0;
+    display:flex;
+    flex-direction:column;
+  }
+  .site-header .nav{ order:1; }        /* nav to the very top */
+  .site-header .wordmark{ order:2; }   /* name directly below it */
+  .nav-plate{ display:none; }          /* the bar becomes the nav's own background */
+  .nav{
+    position:static;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: calc(8 * var(--u));
+    width:100%;
+    padding: calc(13 * var(--u)) calc(16 * var(--u));
+    background:var(--plate);
+    font-size: calc(20 * var(--u));
+    line-height:1.3;
+  }
+  .wordmark{
+    position:static;
+    margin: calc(16 * var(--u)) 0 0 calc(16 * var(--u));
+    font-size: calc(54 * var(--u));
+    line-height:1.1;
+  }
+
+  /* --- home: the same rotated plates as the desktop composition --- */
+  .home{ height:100vh; overflow:hidden; }
+  .home-stage{
+    width:  calc(390 * var(--u));
+    height: calc(806 * var(--u));
+  }
+  /* the phone composition from the mockup: a wide name plate tilted
+     across the upper third, and a tilted nav square below and right */
+  .home-name-plate{
+    padding: calc(14 * var(--u)) calc(26 * var(--u));
+    transform: translate(calc(14 * var(--u)), calc(274 * var(--u))) rotate(-24deg);
+  }
+  .home-nav-plate{
+    padding: calc(20 * var(--u)) calc(26 * var(--u));
+    transform: translate(calc(93 * var(--u)), calc(545 * var(--u))) rotate(-20deg);
+  }
+  .home-name{ font-size: calc(56 * var(--u)); }
+  .home-nav{ font-size: calc(34 * var(--u)); line-height:1.35; }
+
+  /* --- work: one column --- */
+  .work-wrap{
+    --gap: calc(16 * var(--u));
+    width:auto;
+    margin: 0 var(--gap) var(--gap);
+    padding-top: var(--gap);
+    gap: var(--gap);
+  }
+  .work-row-split, .work-row-pair{
+    display:flex; flex-direction:column; gap: var(--gap);
+  }
+  .work-row-split .tall, .work-row-split .sq,
+  .work-row-pair .tile, .work-row-pair > *,
+  .h-bloodondot,.h-sebiowomens,.h-sebiocube,.h-glitched{ height:auto; aspect-ratio:auto; }
+  .tile img{ height:auto; }
+  .hover-tag{ display:none; }              /* no pointer on touch devices */
+
+  /* --- about: one column, and the gap under the name matches the gap
+         between the CV link and the photograph --- */
+  .about-grid{ height:auto; overflow:visible; padding: 0 calc(16 * var(--u)) calc(46 * var(--u)); }
+  .about-copy-col{ position:static; bottom:auto; width:auto; --acol: calc(624 * var(--u)); }
+  .about-copy-col .section-title{ font-size: calc(34 * var(--u)); }
+  .about-copy-col .body-copy{ font-size: calc(16 * var(--u)); }
+  .about-title{
+    font-size: calc(34 * var(--u));
+    margin-top: calc(28 * var(--u));      /* name  ->  "Who I am"      */
+  }
+  .about-copy{ margin-top: calc(14 * var(--u)); }
+  .about-copy p{ margin-bottom: calc(16 * var(--u)); }
+  .body-copy{ font-size: calc(16 * var(--u)); }
+  .about-cv{ margin-top: calc(14 * var(--u)); }
+  .about-photo{
+    position:relative;
+    right:auto; top:auto; bottom:auto;
+    width:100%; height:auto;
+    aspect-ratio: 544 / 733;
+    margin-top: calc(28 * var(--u));      /* "Read My CV Here" -> photo */
+    border-radius: calc(8 * var(--u));
+  }
+  .about-star{
+    width: calc(260 * var(--u));
+    height:calc(260 * var(--u));
+    right:  calc(-98 * var(--u));
+    bottom: calc(-116 * var(--u));
+  }
+
+  /* --- contact --- */
+  .contact-block{ padding: 0 calc(16 * var(--u)) calc(56 * var(--u)); }
+  .contact-title{ margin-left:0; padding-top: calc(26 * var(--u)); font-size: calc(34 * var(--u)); }
+  .contact-list{ margin: calc(16 * var(--u)) 0 0; width:auto; }
+  .contact-list h3{ font-size: calc(16 * var(--u)); }
+  .contact-list ul{ margin-bottom: calc(18 * var(--u)); }
+}
