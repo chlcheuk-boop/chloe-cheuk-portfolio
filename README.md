@@ -63,7 +63,7 @@ elements reproduce the Figma matrices (`18.74°` name, `-40.70°` nav,
 | page | desktop | mobile |
 |---|---|---|
 | home | the exact Figma collage (3 starbursts, 3 circles, 1 triangle) | six large shapes from the mockup, one off each edge |
-| work | circles only — fewer and much larger (958 wide at 1440) | circles only |
+| work | circles only — 605 wide at 1440 (0.42 of the page), well spread | circles only |
 | about | one starburst, on the photo's bottom-right corner | same |
 | contact | one interlocking band under the copy, even margins all round | same interlocking pattern, smaller, filling everything below the copy |
 
@@ -215,6 +215,29 @@ only pages whose height depends on images get that second pass.
 
 Phones **and tablets** (≤ 1024px) get the phone treatment throughout,
 including the tilted-plate home composition.
+
+## The work page background
+
+Circles only, sized just under half the page wide and spread so roughly
+one lands every two-and-a-bit page widths of scroll — most running off an
+edge, a few sitting whole in the middle.
+
+Two of `scatter()`'s options are set here rather than left to their
+defaults, both for the same reason: at this size the page is only about
+one cell wide, so anything that widens the lattice starves it of candidate
+points.
+
+- **`cell` (850) is deliberately below `big + gap`.** Letting it default
+  skipped whole rows and left a 1754u band of page with nothing in it. A
+  tighter lattice offers more places to try while `gap` still keeps the
+  circles apart, which evens out the rhythm — the largest vertical gap
+  drops to 855u.
+- **`bleed` (220) is fixed rather than scaled off the cell.** The default
+  grows with the cell, and at this spacing it pushed the lattice so far
+  off-frame that no circle landed whole inside the page at all.
+
+Measured at 1440 wide: 11 circles, 605u across, 5 of them fully inside the
+page, largest vertical gap 855u.
 
 ## Work page spacing
 

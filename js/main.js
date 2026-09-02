@@ -500,11 +500,26 @@
 
     } else {
       /* work — fewer, larger circles on an even lattice */
+      /* Desktop: circles a little under half the page wide, well spread —
+         about one every two-and-a-bit page widths of scroll, most running
+         off an edge with a few sitting whole in the middle.
+
+         `cell` is set below `big + gap` on purpose: at this size the page
+         is only about one cell wide, so leaving the lattice to the gap
+         alone skipped rows and left a 1754u band of nothing. A tighter
+         lattice offers more candidate points while `gap` still keeps the
+         circles apart, which evens the rhythm out (largest vertical gap
+         855u instead). `bleed` is likewise set rather than left to scale
+         with the cell, which pushed the lattice off-frame until no circle
+         landed whole inside the page. */
       items = scatter(W, H, {
-        seed: 23, types: ['circle'],
-        scale: mob ? 0.62 : 1.6,
-        gap: mob ? 34 : 90,
-        jitter: 0.18
+        types: ['circle'],
+        seed:   mob ? 23   : 4,
+        scale:  mob ? 0.62 : 1.01,
+        gap:    mob ? 34   : 380,
+        jitter: mob ? 0.18 : 0.3,
+        bleed:  mob ? undefined : 220,
+        cell:   mob ? undefined : 850
       });
     }
 
