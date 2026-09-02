@@ -145,7 +145,16 @@ page, and the foot of the photo to the bottom of the page. Measured at
 1440x900: all four are 50.4px, and the column shares the photo's top
 (223.4) and bottom (849.6) lines exactly.
 
-**Home** — asked for, but nothing to change: it already scales
+**Home** — the desktop triangle sits 45u left and 45u down from where the
+settle leaves it (`HOME_TRI_NUDGE`). The repel off the name plate, not the
+Figma origin, is what fixes that shape's resting place — it moves it from
+(688.8, 484.8) to (791.5, 262.8) — so moving the origin would just be
+undone; the nudge is applied after the settle instead. Checked on drawn
+geometry, not bounding boxes: 92.9u clear of the nearest plate and 73.5u
+of the nearest shape, no overlaps. (A rotated triangle's bounding box is
+614x620 against a 468x406 drawing, so a box test reports false contacts.)
+
+Home scaling itself needed no change: it already scales
 proportionally, and this was verified rather than assumed. Both the text
 and the vectors are sized in `--u`, and every frame-relative position is
 constant. Measured at 1440x900, 1200x1000, 1920x1080 and 1600x760 (aspect

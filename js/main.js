@@ -77,6 +77,12 @@
     };
   });
 
+  /* The settle pushes the triangle up and to the right to clear the name
+     plate; the composition wants it a little lower and further left than
+     that leaves it, so it is nudged back afterwards rather than fighting
+     the repel with coordinates it would only undo. Frame units. */
+  var HOME_TRI_NUDGE = { x: -45, y: 45 };
+
   /* The phone home screen, laid out from the mockup: six large shapes,
      each running off one edge, around the two tilted plates. */
   var HOME_MOBILE = [
@@ -466,6 +472,11 @@
           return { s: it.s, cx: it.cx + offX, cy: it.cy + offY, size: it.size, rot: it.rot };
         });
         items = space(items, rects, 130, 24);
+        items = items.map(function (it) {
+          if (it.s !== 'triangle') return it;
+          return { s: it.s, cx: it.cx + HOME_TRI_NUDGE.x,
+                   cy: it.cy + HOME_TRI_NUDGE.y, size: it.size, rot: it.rot };
+        });
       }
 
     } else if (page === 'contact') {
