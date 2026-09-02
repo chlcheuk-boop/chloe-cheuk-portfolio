@@ -130,6 +130,39 @@ Verified in-browser after the fix: all four pages render with no console
 errors at 1440x900, and the phone home at 375x812 shows the triangle
 large at centre-left.
 
+## Desktop tidy-up (contact, about, home)
+
+**Contact** — the desktop tessellation is gone; `triangleBand()` builds one
+interlocking band under the copy instead. Equal margin on all four sides,
+one shared bottom line for the upright triangles and one shared top line
+for the inverted ones, every triangle the same size. See the README for
+the sizing solve. `CONTACT_FIGMA` was deleted with it.
+
+**About** — the photo and the copy column now span one band centred in the
+space under the header, so four gaps are equal: header to "Who I am",
+header to the top of the photo, "Read My CV Here" to the bottom of the
+page, and the foot of the photo to the bottom of the page. Measured at
+1440x900: all four are 50.4px, and the column shares the photo's top
+(223.4) and bottom (849.6) lines exactly.
+
+**Home** — asked for, but nothing to change: it already scales
+proportionally, and this was verified rather than assumed. Both the text
+and the vectors are sized in `--u`, and every frame-relative position is
+constant. Measured at 1440x900, 1200x1000, 1920x1080 and 1600x760 (aspect
+1.20 to 2.11, `--u` from 0.717 to 1.019), each shape's centre as a
+fraction of the 1440x1060 frame held to within 0.0006, and the settled
+plates sat at the same frame coordinates (name 662, nav 492.3) every time.
+
+Worth knowing for any future attempt: `space()` / `repel()` / `separate()`
+use only distances *between* shapes and plates, so they are translation
+invariant — settling in frame coordinates and settling in viewport
+coordinates give bit-identical results. An A/B of the two at the same
+window confirmed it. What does change with the window is how much of the
+composition the window crops: `--u` scales to *fit*, so on a window wider
+than 1440:1060 the shapes meant to bleed off the edge sit inside white
+margins instead. If the home page still looks wrong, that framing is the
+thing to change, not the placement maths.
+
 ## Still open — iPad / iPhone 1:1 replica
 
 The user's earlier request was that **the iPad and iPhone home screens be

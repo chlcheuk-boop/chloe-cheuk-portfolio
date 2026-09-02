@@ -302,11 +302,19 @@ a{ color:inherit; }
   --acol: min(calc(100vw - 810 * var(--au)), calc(624 * var(--au)));
   position:absolute;
   left: calc(89 * var(--au));
-  /* anchored to the bottom, so the foot of "Read My CV Here" lines up
-     with the foot of the photograph; the spacing inside the column
-     (heading -> body -> CV link) is untouched */
-  bottom: calc(53 * var(--au));
+  /* The column spans exactly the photograph's band and is centred in the
+     space under the header with it, so the gap from the header down to
+     "Who I am" and to the top of the photo is the same as the gap from
+     "Read My CV Here" and the foot of the photo down to the bottom of the
+     page. The CV link is pushed to the foot of the column, which keeps it
+     level with the bottom of the photograph. */
+  top:50%;
+  transform:translateY(-50%);
+  height: calc(733 * var(--au));
   width: var(--acol);
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
 }
 .about-copy-col .section-title{ font-size: calc(var(--acol) * 48 / 624); }
 .about-copy-col .body-copy{ font-size: calc(var(--acol) * 24 / 624); }
@@ -316,17 +324,20 @@ a{ color:inherit; }
 .about-copy p:last-child{ margin-bottom:0; }
 .about-cv{
   display:inline-block;
-  margin-top: calc(var(--acol) * 48 / 624);
+  /* to the foot of the column, level with the bottom of the photograph */
+  margin-top:auto;
   text-decoration:underline;
   text-underline-offset: calc(var(--acol) * 4 / 624);
 }
 
 .about-photo{
-  /* pinned to the bottom-right, so the starburst hanging off its corner
-     always runs past the bottom-right corner of the page */
+  /* centred in the space under the header, so the gap above it matches the
+     gap below it; the starburst hanging off its corner still runs past the
+     bottom-right corner of the page */
   position:absolute;
   right:  calc(68 * var(--au));
-  bottom: calc(53 * var(--au));
+  top:50%;
+  transform:translateY(-50%);
   width:  calc(544 * var(--au));
   height: calc(733 * var(--au));
 }
@@ -521,7 +532,11 @@ a{ color:inherit; }
   /* --- about: one column, and the gap under the name matches the gap
          between the CV link and the photograph --- */
   .about-grid{ height:auto; overflow:visible; padding: 0 calc(16 * var(--u)) calc(46 * var(--u)); }
-  .about-copy-col{ position:static; bottom:auto; width:auto; --acol: calc(624 * var(--u)); }
+  .about-copy-col{
+    position:static; top:auto; bottom:auto; transform:none;
+    height:auto; display:block; width:auto;
+    --acol: calc(624 * var(--u));
+  }
   .about-copy-col .section-title{ font-size: calc(34 * var(--u)); }
   .about-copy-col .body-copy{ font-size: calc(16 * var(--u)); }
   .about-title{
@@ -534,7 +549,7 @@ a{ color:inherit; }
   .about-cv{ margin-top: calc(14 * var(--u)); }
   .about-photo{
     position:relative;
-    right:auto; top:auto; bottom:auto;
+    right:auto; top:auto; bottom:auto; transform:none;
     width:100%; height:auto;
     aspect-ratio: 544 / 733;
     margin-top: calc(28 * var(--u));      /* "Read My CV Here" -> photo */

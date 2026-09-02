@@ -65,7 +65,7 @@ elements reproduce the Figma matrices (`18.74°` name, `-40.70°` nav,
 | home | the exact Figma collage (3 starbursts, 3 circles, 1 triangle) | six large shapes from the mockup, one off each edge |
 | work | circles only — fewer and much larger (958 wide at 1440) | circles only |
 | about | one starburst, on the photo's bottom-right corner | same |
-| contact | the Figma triangle tessellation | same interlocking pattern, smaller, filling everything below the copy |
+| contact | one interlocking band under the copy, even margins all round | same interlocking pattern, smaller, filling everything below the copy |
 
 `scatter()` in `js/main.js` lays shapes out in two passes:
 
@@ -124,6 +124,34 @@ banish the shape out of sight.
 The desktop home keeps the exact Figma composition, triangle included;
 only the plate spacing is adjusted there.
 
+## The contact band
+
+The desktop contact page is one interlocking band: n upright triangles
+whose bases share a bottom line, and n-1 inverted ones whose bases share a
+top line, nested in the gaps. Every triangle is the same size.
+
+They are laid out on a perfect tessellation of pitch `w` and then shrunk
+by `SHRINK` about their own centroids, which opens an even white gutter
+everywhere without moving either alignment line — the 541 box is built so
+the drawn centroid *is* the box centre, so the shrink is just a smaller
+box at the same point. Note the drawn triangle is 468.52 x 405.75 inside
+that 541 box, so the tessellation works from the drawing, not the box.
+
+Sizing gives the same gap on all four sides. After the shrink the band
+draws `w(n - g)` wide and `r*w(1 - 2g/3)` tall, so
+
+    W - w(n - g)  ==  Hr - r*w(1 - 2g/3)
+
+fixes `w` for a given n — and it holds for *every* n, so the margin comes
+out equal all round whatever count is chosen. n only decides how big the
+triangles are: fewer means larger, and a larger band leaves a smaller
+margin. The code takes the fewest that still keeps a 40u margin, which
+holds the triangles near their Figma size instead of letting a wide,
+shallow window shave the band into a sawtooth strip of small ones.
+
+Measured at 1440x900: 5 upright and 4 inverted, every one 249u wide, the
+four margins all 54.3u, one bottom line and one top line.
+
 ## Home always fits
 
 The home screen is a fixed composition — 1440 x 1060 on desktop,
@@ -147,12 +175,16 @@ available height but never wider than the Figma frame allows:
 --au: min(calc((100vh - var(--header-h)) / 851), calc(100vw / 1440));
 ```
 
-The photo is pinned to the bottom-right and the starburst hangs off its
-corner by a fixed ratio, so the starburst always runs past the page's
-bottom-right corner. The copy column is anchored to the same bottom line,
-which puts the foot of "Read My CV Here" exactly level with the foot of
-the photo, and its type and spacing are a fixed fraction of its own width
-(`--acol`) so the block keeps the Figma proportions and always fits.
+The photo and the copy column both span one band, centred in the space
+under the header, so the gap from the header down to "Who I am" and to the
+top of the photo is the same as the gap from "Read My CV Here" and the
+foot of the photo down to the bottom of the page — four equal gaps. The
+column is a flex column with the CV link pushed to its foot, which keeps
+that link exactly level with the bottom of the photo. Its type and spacing
+are a fixed fraction of its own width (`--acol`) so the block keeps the
+Figma proportions and always fits. The starburst hangs off the photo's
+corner by a fixed ratio, so it always runs past the page's bottom-right
+corner.
 
 On a phone the column stacks, and the gap under "Chloe Cheuk" matches the
 gap between "Read My CV Here" and the photograph.

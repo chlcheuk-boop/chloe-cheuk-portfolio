@@ -88,15 +88,63 @@
     { s: 'star',     cx: 364, cy: 800, size: 186 }
   ].map(function (o) { o.rot = 0; return o; });
 
-  /* The contact tessellation — Figma box origins as centres (541 box) */
-  var CONTACT_FIGMA = [
-    [1032.5, 508.5,   0], [1571.5, 511.5,   0], [228.5, 989.5,   0],
-    [ 767.5, 994.5,   0], [1303.5, 977.5,   0],
-    [1302.5, 359.5, 180], [ 761.5, 359.5, 180], [ -30.5, 824.5, 180],
-    [ 500.5, 824.5, 180], [1032.5, 824.5, 180], [1574.5, 819.5, 180]
-  ].map(function (t) {
-    return { s: 'triangle', cx: t[0], cy: t[1], size: 541, rot: t[2] };
-  });
+  /* The drawn triangle inside its 541 box: the path spans x 36.24..504.76
+     and y 0..405.75, so the box carries padding the tessellation must not
+     count. Width : height is 468.52 : 405.75 — a true equilateral. */
+  var TRI_W = 504.76 - 36.24, TRI_H = 405.75, TRI_BOX = 541;
+
+  /* One interlocking band, all triangles the same size: n upright ones
+     whose bases share the bottom line, and n-1 inverted ones whose bases
+     share the top line, nested in the gaps between them.
+
+     The triangles are laid out on a perfect tessellation of pitch w and
+     then shrunk by SHRINK about their own centroids, which opens an even
+     white gutter everywhere without disturbing either alignment line —
+     the 541 box is built so the drawn centroid IS the box centre, so the
+     shrink is just a smaller box at the same point.
+
+     Sizing solves for equal gaps on all four sides. After the shrink the
+     band draws  w(n - g)  wide and  r*w(1 - 2g/3)  tall, so
+         W - w(n - g)  ==  Hr - r*w(1 - 2g/3)
+     which fixes w for a given n — and it holds for EVERY n, so the margin
+     comes out equal all round whatever count we pick. n only chooses how
+     big the triangles are: fewer means larger, and a larger band leaves a
+     smaller margin. We take the fewest (so the largest) that still keeps a
+     margin of minM, which holds the triangles near their Figma size
+     instead of letting a wide, shallow window shave the band down into a
+     sawtooth strip of small ones. */
+  var SHRINK = 0.08;
+
+  function triangleBand(W, top, bottom, minM) {
+    var Hr = bottom - top, r = TRI_H / TRI_W, g = SHRINK, best = null;
+    for (var n = 2; n <= 14; n++) {
+      var w = (W - Hr) / (n - g - r * (1 - 2 * g / 3));
+      if (!(w > 0)) continue;
+      var M = (W - w * (n - g)) / 2;
+      if (M < minM) continue;
+      best = { n: n, w: w, M: M };
+      break;
+    }
+    if (!best) return [];
+
+    var w = best.w, h = r * w, n = best.n;
+    /* the lattice sits half a gutter outside the drawn band */
+    var x0 = best.M - w * g / 2;
+    var y0 = top + best.M - h * g / 3;
+    var size = TRI_BOX * (w * (1 - g)) / TRI_W;
+    var out = [], i;
+    /* upright — centroid two thirds down, bases on the bottom line */
+    for (i = 0; i < n; i++) {
+      out.push({ s: 'triangle', cx: x0 + i * w + w / 2,
+                 cy: y0 + 2 * h / 3, size: size, rot: 0 });
+    }
+    /* inverted — centroid one third down, bases on the top line */
+    for (i = 0; i < n - 1; i++) {
+      out.push({ s: 'triangle', cx: x0 + (i + 1) * w,
+                 cy: y0 + h / 3, size: size, rot: 180 });
+    }
+    return out;
+  }
 
   /* ---------- deterministic RNG, so a repaint is stable ---------- */
   function mulberry32(a) {
@@ -408,7 +456,11 @@
         items = rest;
 
       } else {
-        /* the exact Figma composition, with the plates given extra room */
+        /* the exact Figma composition, with the plates given extra room.
+           space() only ever uses distances between shapes and plates, so
+           offsetting both first and settling in viewport coordinates gives
+           the same answer as settling in the frame's — the layout is the
+           same fraction of the frame at every window size. */
         var offX = (W - 1440) / 2, offY = (H - 1060) / 2;
         items = HOME_FIGMA.map(function (it) {
           return { s: it.s, cx: it.cx + offX, cy: it.cy + offY, size: it.size, rot: it.rot };
@@ -426,7 +478,13 @@
           : 0;
         items = triangleBands(W, textBottom + 40, H, 118);
       } else {
-        items = CONTACT_FIGMA;
+        /* one even band under the copy, equal gaps on all four sides */
+        var cbox = host.getBoundingClientRect();
+        var clist = document.querySelector('.contact-list');
+        var cTop = clist
+          ? (clist.getBoundingClientRect().bottom - cbox.top) / u
+          : H / 2;
+        items = triangleBand(W, cTop, H, 40);
       }
 
     } else {
