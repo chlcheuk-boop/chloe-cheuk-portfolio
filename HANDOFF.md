@@ -433,6 +433,36 @@ show:
 **four** (`home` was added when the user asked that every page link to
 every page). Confirm which they want before matching pixel-for-pixel.
 
+## Link preview
+
+Every page carries Open Graph and Twitter card tags, all pointing at
+`images/preview.png` — the home page after its intro has settled, rendered
+at 2400x1260 (2x of the 1200x630 card) with
+
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+      --headless=new --window-size=1200,630 --force-device-scale-factor=2 \
+      --virtual-time-budget=8000 --screenshot=preview.png \
+      http://127.0.0.1:4173/index.html
+
+`--virtual-time-budget` is what lets the intro run to its resting state
+before the shot; without it the shapes are caught mid-flight. Re-run it if
+the home composition changes.
+
+**The URLs are absolute and hardcoded**, because a relative `og:image` is
+ignored outright by every scraper. They currently read
+
+    https://chlcheuk-boop.github.io/chloe-cheuk-portfolio
+
+which is the GitHub Pages default for this repo. **Pages was not enabled
+when this was written** — the API and the .github.io URL both 404 — so the
+preview cannot resolve until it is turned on, or until the URLs are pointed
+at wherever the site actually lives:
+
+    grep -rl chlcheuk-boop.github.io *.html | xargs sed -i '' 's|https://chlcheuk-boop.github.io/chloe-cheuk-portfolio|https://YOUR-DOMAIN|g'
+
+LinkedIn caches a preview per URL for around a week; its Post Inspector
+(linkedin.com/post-inspector) forces a re-scrape after a change.
+
 ## Also open
 
 - Fonts load from Google Fonts.
