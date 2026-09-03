@@ -453,12 +453,8 @@ Read tool. `scratchpad/pdftext.swift` — twenty lines of PDFKit, built with
 time. Note the PDF's own text has letter-spacing artefacts ("Sof tware Us e
 d", "Swif t"), so it needs reading rather than pasting.
 
-**The font is Instrument Sans, not Telegraph.** The user asked for
-"telegraph sans"; it is not on Google Fonts (Telegraph, Telegraph Sans and
-Telegraf all return 400) and no Telegraph file is on the machine. Telegraph
-is the typeface in CLA's own brand guidelines, which may be the source of
-the name. Swapping it in needs a licensed file dropped into the repo and an
-`@font-face`.
+**The line is Instrument Sans** (`var(--sans)`), the site's own sans, which
+keeps it distinct from the serif titles.
 
 ## Link preview
 
