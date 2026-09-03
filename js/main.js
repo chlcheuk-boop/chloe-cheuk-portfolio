@@ -536,7 +536,7 @@
 
     layer.innerHTML = items.map(svgFor).join('');
     applyPlacement(layer);
-    coverLayer(layer, page, mob);
+    coverLayer(layer, page, mob, u);
   }
 
   /* The composition is laid out to FIT the window, which leaves white bands
@@ -549,10 +549,11 @@
      cover as well was measured: cover crops from the bottom and the name
      plate sits low in the frame, so "Chloe Cheuk" lost 61% of itself at
      1440x900 and all of itself past about 2300px wide. */
-  function coverLayer(layer, page, mob) {
+  function coverLayer(layer, page, mob, fit) {
     if (page !== 'home' || mob) { layer.style.transform = ''; return; }
     var w = window.innerWidth, h = window.innerHeight;
-    var fit   = Math.min(w / 1440, h / 1060);
+    /* `fit` is the measured --u, not a second copy of the CSS formula —
+       the two drifting apart would scale the layer by the wrong amount. */
     var cover = Math.max(w / 1440, h / 1060);
     if (!(fit > 0)) { layer.style.transform = ''; return; }
     layer.style.transformOrigin = '50% 50%';

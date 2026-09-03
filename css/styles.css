@@ -31,7 +31,12 @@
 /* The home screen is one fixed composition, so it scales to FIT the
    window — that keeps the name and the nav fully visible, never scrolled. */
 body[data-page="home"]{
-  --u: min(calc(100vw / 1440), calc(100vh / 1060));
+  /* Fit the frame inside the window but keep 48px clear top and bottom.
+     The frame puts the name plate only 15u above its own bottom edge, so
+     fitting it exactly to the window left "Chloe Cheuk" sitting on the
+     bottom edge — about 12px clear on a short window. Reserving the margin
+     in px rather than in --u means it cannot scale away. */
+  --u: min(calc(100vw / 1440), calc((100vh - 96px) / 1060));
 }
 /* the vector layer is scaled past the viewport to cover it (see
    coverLayer in main.js); clip that rather than letting it scroll */

@@ -287,6 +287,19 @@ horizontally.
 Note this is deliberate per the request: a stacked portrait image fills the
 full column width, so the 396x704 JSA story graphics get tall on a phone.
 
+## The name plate always clears the bottom
+
+The frame puts the name plate only 15u above its own bottom edge, so
+fitting the frame exactly to the window left "Chloe Cheuk" about 12px off
+the bottom of the screen — the first thing the user flagged on a 14in
+MacBook. `--u` now fits against `100vh - 96px`, reserving 48px top and
+bottom. The reserve is in px on purpose: in --u it would scale away on
+exactly the short windows that need it. Measured 59-61px of clearance at
+1512x845, 1512x982, 1440x900 and 2560x900.
+
+`coverLayer()` is handed the measured `--u` rather than recomputing the fit
+from the viewport, so the CSS formula and the scale can never drift apart.
+
 ## Home fills the window
 
 The composition is still laid out to FIT (`--u` unchanged), and then
