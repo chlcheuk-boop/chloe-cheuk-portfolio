@@ -456,6 +456,69 @@ a{ color:inherit; }
 /* ============================================================
    MOBILE
    ============================================================ */
+/* ============================================================
+   PROJECT PAGES  (a work tile opens one of these)
+   ============================================================ */
+.project{
+  position:relative;
+  z-index:1;
+  /* 96u below the header puts the title on the frame's own 269 line */
+  padding: calc(96 * var(--u)) calc(89 * var(--u)) calc(150 * var(--u));
+}
+.project-title{ margin:0 0 calc(30 * var(--u)); }
+
+/* Two intro shapes from the Figma frames: copy beside a portrait hero,
+   or copy above a full-width one. --split carries each page's own column
+   ratio, taken from its frame. */
+.project-intro{ display:grid; gap: calc(40 * var(--u)); align-items:start; }
+.project-intro--split{ grid-template-columns: var(--split, 1fr 1.6fr); }
+.project-intro--stack{ grid-template-columns: minmax(0, 1fr); }
+.project-lede{ max-width: calc(1150 * var(--u)); }
+.project-copy .body-copy p{ margin: 0 0 calc(22 * var(--u)); }
+.project-copy .body-copy p:last-child{ margin-bottom:0; }
+.project-copy figure{ margin: calc(40 * var(--u)) 0 0; }
+
+.project figure{ margin:0; }
+.project img{ display:block; width:100%; height:auto; }
+
+.project-section{ margin-top: calc(110 * var(--u)); }
+.project-section > .section-title{ margin: 0 0 calc(34 * var(--u)); }
+.project-caption{ margin: calc(24 * var(--u)) 0 0; }
+
+/* A row of images. Every cell is one equal fraction and every image fills
+   its cell, so the images share a width whatever their proportions are,
+   and height:auto keeps each one's aspect ratio. */
+.img-row{
+  display:grid;
+  gap: calc(30 * var(--u));
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+}
+.img-row.cols-2{ --cols:2; }
+.img-row.cols-3{ --cols:3; }
+.img-row + .img-row{ margin-top: calc(30 * var(--u)); }
+
+.figma-link{
+  margin: calc(30 * var(--u)) 0 0;
+  padding: calc(18 * var(--u)) calc(22 * var(--u));
+  background:#EFEFEF;
+  overflow-wrap:anywhere;
+}
+.project-back{
+  display:inline-block;
+  margin-top: calc(110 * var(--u));
+  font-family:var(--sans);
+  font-size: calc(20 * var(--u));
+  text-decoration:underline;
+  text-underline-offset: calc(4 * var(--u));
+}
+
+/* Stacking. A three-up row runs out of room first, so it collapses to one
+   column while there is still space for two; below the site's own 1024
+   breakpoint every row is stacked (see the mobile block). */
+@media (max-width:1200px){
+  .img-row.cols-3{ --cols:1; }
+}
+
 @media (max-width:1024px){
   /* 1u tracks a 390-wide phone frame, capped so tablet-width windows
      don't balloon the type. Widths stay fluid (100%/auto). */
@@ -561,6 +624,21 @@ a{ color:inherit; }
     right:  calc(-98 * var(--u));
     bottom: calc(-116 * var(--u));
   }
+
+  /* --- project pages: one column, everything stacked --- */
+  .project{ padding: calc(26 * var(--u)) calc(16 * var(--u)) calc(56 * var(--u)); }
+  .project-title{ font-size: calc(26 * var(--u)); }
+  .project-copy .body-copy, .project-lede, .project-caption, .figma-link{ font-size: calc(15 * var(--u)); }
+  .project-copy .body-copy p{ margin-bottom: calc(14 * var(--u)); }
+  .project-intro{ gap: calc(20 * var(--u)); }
+  .project-intro--split{ grid-template-columns: minmax(0, 1fr); }
+  .project-copy figure{ margin-top: calc(20 * var(--u)); }
+  .project-section{ margin-top: calc(46 * var(--u)); }
+  .project-section > .section-title{ font-size: calc(22 * var(--u)); margin-bottom: calc(16 * var(--u)); }
+  /* every row stacks, each image the same width, aspect ratio kept */
+  .img-row, .img-row.cols-2, .img-row.cols-3{ --cols:1; gap: calc(16 * var(--u)); }
+  .img-row + .img-row{ margin-top: calc(16 * var(--u)); }
+  .project-back{ margin-top: calc(40 * var(--u)); font-size: calc(16 * var(--u)); }
 
   /* --- contact --- */
   .contact-block{ padding: 0 calc(16 * var(--u)) calc(56 * var(--u)); }

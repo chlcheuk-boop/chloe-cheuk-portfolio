@@ -172,6 +172,54 @@ than 1440:1060 the shapes meant to bleed off the edge sit inside white
 margins instead. If the home page still looks wrong, that framing is the
 thing to change, not the placement maths.
 
+## Project pages
+
+Nine pages, `work-<slug>.html`, one per work tile, built from `Desktop - 6`
+and `8..15` of `~/Downloads/Untitled (4).fig`. Every tile on the work page
+now links to its own page instead of `#`.
+
+**Getting them out of the .fig.** Same trick as the first file — it is a
+ZIP whose `canvas.fig` is kiwi binary (schema chunk raw deflate, data chunk
+zstd). `scratchpad/figdec.py` decodes it to JSON; the decoder walks the
+node tree, accumulates each node's transform up to its root frame, and
+sorts by y then x to recover reading order. Two things made this easy:
+image fills carry a human `name` ("cla branding", "designclubpost-14"), and
+grouping images whose y agree within 40u recovers the rows exactly.
+
+Watch out for **stacked duplicates**: `Desktop - 8` has CLA images sitting
+underneath the JSA ones at identical coordinates. The extractor keeps the
+last node at each position, which is the one drawn on top.
+
+**Images.** 48 of the file's 98 images are used. They came out at up to
+4096px and 75MB total, so they are resampled to 2000px max and JPEG q82 —
+19MB, 0.6-4.1MB per page, all `loading="lazy"`. Originals are in the
+scratchpad if a bigger export is ever wanted.
+
+**Two intro shapes**, taken from the frames: copy beside a portrait hero
+(cla, jsa, design-club, mfah, opencall) or copy above a full-width hero
+(the two sebios, bloodondot, glitched). Each split page carries its own
+column ratio from its frame in `--split`. `.project` has 96u of top
+padding so the title lands on the frame's own 269 line.
+
+## Image rows and stacking
+
+`.img-row` is a grid of `repeat(var(--cols), minmax(0,1fr))`, so every cell
+is an equal fraction and every image fills its cell — the images share a
+width whatever their proportions, and `height:auto` keeps each one's
+aspect ratio. `minmax(0,1fr)` rather than `1fr` matters: `1fr` is
+`minmax(auto,1fr)` and a wide image would refuse to shrink below its
+intrinsic width and overflow the row.
+
+A three-up row runs out of room before a two-up, so it collapses first, at
+1200px; below the site's own 1024 breakpoint every row is stacked. Verified
+by measuring in an iframe at 1440, 1200, 1100, 1000, 768 and 390: columns
+go 3->1 and 2->2->1 as expected, every row reports one distinct width, every
+image holds its aspect ratio to within 2%, and no page overflows
+horizontally.
+
+Note this is deliberate per the request: a stacked portrait image fills the
+full column width, so the 396x704 JSA story graphics get tall on a phone.
+
 ## Still open — iPad / iPhone 1:1 replica
 
 The user's earlier request was that **the iPad and iPhone home screens be

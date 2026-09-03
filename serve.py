@@ -1,6 +1,6 @@
 """Dev server for the portfolio: identical to python -m http.server but
 sends no-store so the browser always picks up the latest edit."""
-import functools, http.server
+import functools, http.server, os
 
 class NoCache(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -16,5 +16,6 @@ if __name__ == '__main__':
     http.server.test(
         HandlerClass=functools.partial(NoCache, directory='.'),
         ServerClass=http.server.ThreadingHTTPServer,
-        port=4173, bind='127.0.0.1',
+        # PORT lets a launcher hand us a free port; 4173 by default
+        port=int(os.environ.get('PORT', 4173)), bind='127.0.0.1',
     )
