@@ -458,6 +458,14 @@ d", "Swif t"), so it needs reading rather than pasting.
 **The line is Instrument Sans** (`var(--sans)`), the site's own sans, which
 keeps it distinct from the serif titles.
 
+## Home links point at the directory
+
+Every "home" link and wordmark is `href="./"` rather than `href="index.html"`,
+so the URL reads as the bare site root. `./` and not `/`: on GitHub Pages
+the site lives under `/chloe-cheuk-portfolio/`, and a root-absolute link
+would jump to the domain root and 404. All the pages sit in one directory,
+so `./` resolves the same from any of them.
+
 ## Link preview
 
 Every page carries Open Graph and Twitter card tags, all pointing at
