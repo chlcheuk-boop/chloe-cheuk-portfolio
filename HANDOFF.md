@@ -77,7 +77,9 @@ of the centred `.home-stage` into the vector layer's coordinate space.
   solve `1.3811a = 1.9663b + gap`, making the tall tile exactly as high as
   the two stacked beside it. Background is **circles only**, few and large.
 - **About** — photo + starburst driven by `--au` (height-based, clamped by
-  width). Photo pinned bottom-right; starburst hangs off its corner so it
+  width), except the photo's RIGHT inset, which is `68 * var(--u)` so its
+  edge lands on the header nav plate's. Both are "68", but in different
+  units — using `--au` there put the photo 14px past the header. Photo pinned bottom-right; starburst hangs off its corner so it
   always runs past the page's bottom-right corner. Copy column anchored to
   the same bottom line, so "Read My CV Here" ends level with the photo;
   its type scales with its own width (`--acol`) to keep Figma proportions.

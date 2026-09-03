@@ -357,7 +357,10 @@ a{ color:inherit; }
      gap below it; the starburst hanging off its corner still runs past the
      bottom-right corner of the page */
   position:absolute;
-  right:  calc(68 * var(--au));
+  /* --u, not --au: the header's nav plate is inset 68 of the page's own
+     unit, so matching that number in the photo's height-driven unit put
+     its right edge 14px past the header's. */
+  right:  calc(68 * var(--u));
   top:50%;
   transform:translateY(-50%);
   width:  calc(544 * var(--au));
