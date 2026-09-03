@@ -501,17 +501,20 @@ a{ color:inherit; }
 .project figure{ margin:0; }
 .project img{
   display:block;
-  /* Sized so a whole image fits on screen: it takes its column, but never
-     more than --imgmax of the window's height, and width:auto then lets it
-     narrow to keep its aspect ratio. width:100% with object-fit was doing
-     the same visually but kept a full-width box with dead space beside the
-     picture, which made rows look ragged. Above about 2670px of window the
-     column outgrows the images' own 2000px and they stop scaling, which is
-     the right thing — upscaling them would only blur. */
-  width:auto;
-  max-width:100%;
+  /* Sized so a whole image fits on screen: the box takes its column but is
+     never taller than --imgmax of the window, and object-fit letterboxes
+     the picture inside it, left-aligned, at its own aspect ratio.
+
+     The box has to keep width:100%. With width:auto a lazy image that has
+     not loaded yet has no definite width to size from, so all of them
+     collapsed to 0x0 — no space reserved, and the page had no height. Only
+     the horizontal remainder is dead space and it is white, so this looks
+     the same as sizing the box to the picture. */
+  width:100%;
   height:auto;
   max-height: var(--imgmax, 80vh);
+  object-fit: contain;
+  object-position: left top;
 }
 /* The hero beside the copy is capped like every other image. It used to
    be exempt, to hold its frame's column exactly, but that let it run past
@@ -579,12 +582,10 @@ a{ color:inherit; }
   text-underline-offset: calc(4 * var(--u));
 }
 
-/* Stacking. A three-up row runs out of room first, so it collapses to one
-   column while there is still space for two; below the site's own 1024
-   breakpoint every row is stacked (see the mobile block). */
-@media (max-width:1200px){
-  .img-row.cols-3{ --cols:1; }
-}
+/* Stacking happens only at the site's own 1024 breakpoint, where the mobile
+   block puts every row into one column. A three-up row used to collapse at
+   1200 as well, but the only one is the JSA Instagram stories, which are
+   meant to read as a set across the row on any desktop width. */
 
 @media (max-width:1024px){
   /* 1u tracks a 390-wide phone frame, capped so tablet-width windows
