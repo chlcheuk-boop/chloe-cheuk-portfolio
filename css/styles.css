@@ -503,6 +503,15 @@ a{ color:inherit; }
   --vstep: calc(32 * var(--u));
 }
 .project-title{ margin:0 0 var(--vstep); }
+/* the software line sits in the same rhythm as everything else: one --vstep
+   under the title, one --vstep above the copy, so adding it does not
+   disturb the even spacing */
+.project-software{
+  margin: 0 0 var(--vstep);
+  font-family:var(--sans);
+  font-size: calc(18 * var(--u));
+  line-height:1.35;
+}
 
 .project figure{ margin:0; }
 .project img{
@@ -712,6 +721,7 @@ a{ color:inherit; }
   .project{ padding: calc(26 * var(--u)) calc(16 * var(--u)) calc(56 * var(--u)); --vstep: calc(18 * var(--u)); }
   .project-title{ font-size: calc(26 * var(--u)); }
   .project-copy .body-copy, .project-lede, .project-caption, .figma-link{ font-size: calc(15 * var(--u)); }
+  .project-software{ font-size: calc(13 * var(--u)); }
   .project-copy .body-copy p{ margin-bottom: calc(14 * var(--u)); }
   .project-intro--split{ grid-template-columns: minmax(0, 1fr); column-gap:0; }
   .project-section > .section-title{ font-size: calc(22 * var(--u)); }

@@ -433,6 +433,33 @@ show:
 **four** (`home` was added when the user asked that every page link to
 every page). Confirm which they want before matching pixel-for-pixel.
 
+## The software line
+
+Each project page carries a `.project-software` line under its title,
+listing what the work was made in. It sits in the same `--vstep` rhythm as
+everything else — one step under the title, one above the copy — so it
+slots in without disturbing the even spacing (measured 32 desktop, 18
+phone, on every page).
+
+Seven of the nine came out of `~/Desktop/portfolio pdf version (2).pdf` and
+its predecessor; the user gave CAMH (Adobe Illustrator) and the pain cube
+(Blender, Figma, Adobe Illustrator, Adobe Photoshop) directly, as neither
+is in the PDF.
+
+**Reading that PDF:** raw stream extraction returns gibberish because the
+fonts are subset with custom encodings, and the file is too large for the
+Read tool. `scratchpad/pdftext.swift` — twenty lines of PDFKit, built with
+`swiftc` — dumps the text per page correctly. Reach for that first next
+time. Note the PDF's own text has letter-spacing artefacts ("Sof tware Us e
+d", "Swif t"), so it needs reading rather than pasting.
+
+**The font is Instrument Sans, not Telegraph.** The user asked for
+"telegraph sans"; it is not on Google Fonts (Telegraph, Telegraph Sans and
+Telegraf all return 400) and no Telegraph file is on the machine. Telegraph
+is the typeface in CLA's own brand guidelines, which may be the source of
+the name. Swapping it in needs a licensed file dropped into the repo and an
+`@font-face`.
+
 ## Link preview
 
 Every page carries Open Graph and Twitter card tags, all pointing at
