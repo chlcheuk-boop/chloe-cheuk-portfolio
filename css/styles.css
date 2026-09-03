@@ -382,9 +382,16 @@ a{ color:inherit; }
    CONTACT  (Figma "Desktop - 4")
    ============================================================ */
 .contact-block{ position:relative; z-index:1; padding-bottom: calc(120 * var(--u)); }
-.contact-title{ margin-left: calc(67 * var(--u)); padding-top: calc(119 * var(--u)); }
+/* --cgap is the page's one vertical gap and --cwm the wordmark's overhang
+   below the header box; main.js solves both (see contactRhythm) so this
+   gap, the one under the heading and the band's own margin all match. The
+   fallbacks are only what shows before the script runs. */
+.contact-title{
+  margin-left: calc(67 * var(--u));
+  padding-top: calc((var(--cwm, 39) + var(--cgap, 50)) * var(--u));
+}
 .contact-list{
-  margin: calc(26 * var(--u)) 0 0 calc(73 * var(--u));
+  margin: calc(var(--cgap, 50) * var(--u)) 0 0 calc(73 * var(--u));
   width: calc(624 * var(--u));
 }
 .contact-list h3{

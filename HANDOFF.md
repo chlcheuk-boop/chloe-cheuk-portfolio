@@ -265,6 +265,34 @@ narrowing the row while holding the gap fixed would stop the tall tile
 lining up with the two stacked beside it — about 8u out. Scaling both keeps
 it exact: measured 833.4 against 833.4 at 1440x845.
 
+## The contact page's one gap
+
+Six spacings on the desktop contact page are a single number: under "Chloe
+Cheuk", under "Contact Information", between the Instagram line and the top
+of the triangles, and the band's own left, right and bottom margins.
+Measured all six equal at 1440x845 (49), 1512x845 (53) and 1920x1080 (69).
+
+**They cannot be set independently.** The band's margin falls out of its own
+geometry and depends on the room left under the copy, which depends on the
+gap — so writing a gap into the CSS and reading the margin back would need
+iterating to a fixed point. `contactRhythm()` solves both at once instead:
+asking for the band's equal margin to equal the text gap rearranges to
+
+    S = [ (n-g)(Ph - K) - A*W ] / [ 4(n-g) - 2A ],   A = r(1 - 2g/3)
+
+with n only deciding how big the triangles come out. JS writes S into
+`--cgap`, and `--cwm` carries the wordmark's overhang below the header box,
+which the heading's padding has to make up before the gap starts.
+
+**K is measured, not summed.** It is where the copy would end with no gaps
+at all, taken by subtracting the two gaps currently in force from the list's
+foot. Adding up the wordmark, heading and list heights instead missed the
+trailing margin inside the list and left the band's bottom margin at 125u
+against 44u everywhere else.
+
+Mobile is untouched: it overrides both gaps and keeps its own multi-band
+pattern from `triangleBands()`.
+
 ## Capping tall images
 
 The brief is that a whole image should be visible without scrolling, so

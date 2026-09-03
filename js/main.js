@@ -103,40 +103,18 @@
      whose bases share the bottom line, and n-1 inverted ones whose bases
      share the top line, nested in the gaps between them.
 
-     The triangles are laid out on a perfect tessellation of pitch w and
-     then shrunk by SHRINK about their own centroids, which opens an even
-     white gutter everywhere without disturbing either alignment line —
-     the 541 box is built so the drawn centroid IS the box centre, so the
-     shrink is just a smaller box at the same point.
-
-     Sizing solves for equal gaps on all four sides. After the shrink the
-     band draws  w(n - g)  wide and  r*w(1 - 2g/3)  tall, so
-         W - w(n - g)  ==  Hr - r*w(1 - 2g/3)
-     which fixes w for a given n — and it holds for EVERY n, so the margin
-     comes out equal all round whatever count we pick. n only chooses how
-     big the triangles are: fewer means larger, and a larger band leaves a
-     smaller margin. We take the fewest (so the largest) that still keeps a
-     margin of minM, which holds the triangles near their Figma size
-     instead of letting a wide, shallow window shave the band down into a
-     sawtooth strip of small ones. */
+     They sit on a perfect tessellation of pitch w and are then shrunk by
+     SHRINK about their own centroids, which opens an even white gutter
+     without disturbing either alignment line — the 541 box is built so the
+     drawn centroid IS the box centre, so the shrink is just a smaller box
+     at the same point. M is the margin on all four sides. */
   var SHRINK = 0.08;
 
-  function triangleBand(W, top, bottom, minM) {
-    var Hr = bottom - top, r = TRI_H / TRI_W, g = SHRINK, best = null;
-    for (var n = 2; n <= 14; n++) {
-      var w = (W - Hr) / (n - g - r * (1 - 2 * g / 3));
-      if (!(w > 0)) continue;
-      var M = (W - w * (n - g)) / 2;
-      if (M < minM) continue;
-      best = { n: n, w: w, M: M };
-      break;
-    }
-    if (!best) return [];
-
-    var w = best.w, h = r * w, n = best.n;
+  function triangleBandAt(W, top, n, M) {
+    var r = TRI_H / TRI_W, g = SHRINK;
+    var w = (W - 2 * M) / (n - g), h = r * w;
     /* the lattice sits half a gutter outside the drawn band */
-    var x0 = best.M - w * g / 2;
-    var y0 = top + best.M - h * g / 3;
+    var x0 = M - w * g / 2, y0 = top + M - h * g / 3;
     var size = TRI_BOX * (w * (1 - g)) / TRI_W;
     var out = [], i;
     /* upright — centroid two thirds down, bases on the bottom line */
@@ -150,6 +128,37 @@
                  cy: y0 + h / 3, size: size, rot: 180 });
     }
     return out;
+  }
+
+  /* The contact page's vertical rhythm is one number S: the gap under
+     "Chloe Cheuk", the gap under the heading, and the band's own margin
+     are all it.
+
+     These cannot be set independently. The band's margin comes out of its
+     own geometry and depends on how much room is left under the copy —
+     which depends on S — so writing S into the CSS and then reading the
+     band's margin back would need iterating to a fixed point. Solving both
+     at once instead: equal margins give
+         W - w(n-g) == Hr - r*w(1-2g/3)   with  Hr = Ph - K - 2S,
+     and asking for that margin to equal S rearranges to
+
+         S = [ (n-g)(Ph - K) - A*W ] / [ 4(n-g) - 2A ],   A = r(1 - 2g/3)
+
+     where K is everything the gap does not stretch — the foot of the
+     wordmark plus the heights of the heading and the list. n only decides
+     how big the triangles come out, so take whichever puts S nearest 50u
+     while keeping them legible. */
+  function contactRhythm(W, Ph, K) {
+    var r = TRI_H / TRI_W, g = SHRINK, A = r * (1 - 2 * g / 3), best = null;
+    for (var n = 3; n <= 14; n++) {
+      var S = ((n - g) * (Ph - K) - A * W) / (4 * (n - g) - 2 * A);
+      if (!(S > 0)) continue;
+      var w = (W - 2 * S) / (n - g);
+      if (w < 150) continue;
+      var d = Math.abs(S - 50);
+      if (!best || d < best.d) best = { S: S, n: n, d: d };
+    }
+    return best;
   }
 
   /* ============================================================
@@ -394,13 +403,41 @@
           : 0;
         items = triangleBands(W, textBottom + 40, H, 118);
       } else {
-        /* one even band under the copy, equal gaps on all four sides */
+        /* One rhythm for the whole page: solve S, write it into the two
+           CSS gaps, then build the band with S as its margin. */
         var cbox = host.getBoundingClientRect();
-        var clist = document.querySelector('.contact-list');
-        var cTop = clist
-          ? (clist.getBoundingClientRect().bottom - cbox.top) / u
-          : H / 2;
-        items = triangleBand(W, cTop, H, 40);
+        var cWm = document.querySelector('.wordmark');
+        var cHdr = document.querySelector('.site-header');
+        var cList = document.querySelector('.contact-list');
+        var cTitle = document.querySelector('.contact-title');
+        items = [];
+        if (cWm && cHdr && cList && cTitle) {
+          var wmB = (cWm.getBoundingClientRect().bottom - cbox.top) / u;
+          var hdrB = (cHdr.getBoundingClientRect().bottom - cbox.top) / u;
+          /* K is where the copy would end with no gaps at all. Measure it
+             by taking the two gaps currently in force back off the list's
+             foot, rather than adding up heights — the list carries a
+             trailing margin inside itself, and adding heights missed it and
+             left the band's bottom margin 125u against 44u elsewhere. */
+          var tRect = cTitle.getBoundingClientRect();
+          var lRect = cList.getBoundingClientRect();
+          var titleText = (tRect.top - cbox.top) / u
+                        + parseFloat(getComputedStyle(cTitle).paddingTop) / u;
+          var gapA = titleText - wmB;
+          var gapB = (lRect.top - tRect.bottom) / u;
+          var sol = contactRhythm(W, H, (lRect.bottom - cbox.top) / u - gapA - gapB);
+          if (sol) {
+            var root = document.documentElement;
+            /* the wordmark hangs below the header box; the heading's own
+               padding has to make that up before the gap starts */
+            root.style.setProperty('--cwm', (wmB - hdrB).toFixed(2));
+            root.style.setProperty('--cgap', sol.S.toFixed(2));
+            /* read back after the gaps apply, so the band starts where the
+               list actually ends rather than where it used to */
+            var bandTop = (cList.getBoundingClientRect().bottom - cbox.top) / u;
+            items = triangleBandAt(W, bandTop, sol.n, sol.S);
+          }
+        }
       }
 
     } else {
