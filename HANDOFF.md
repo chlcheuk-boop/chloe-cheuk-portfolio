@@ -201,6 +201,24 @@ scratchpad if a bigger export is ever wanted.
 column ratio from its frame in `--split`. `.project` has 96u of top
 padding so the title lands on the frame's own 269 line.
 
+## Project page spacing
+
+Every gap in the title -> copy -> image rhythm comes from one token,
+`--vstep` (32u desktop, 18u on a phone), and each gap is a margin on the
+element above it and nothing else. Measured on all four page shapes at 1440
+and 390, every gap on a page resolves to exactly one value.
+
+Two things had made it uneven:
+
+- The stacked intro was a grid, so its **row gap stacked on top of the
+  title's own margin** — title -> copy came out 70u there against 30u on the
+  split pages. Only the split intro is a grid now, and only for its columns.
+- `.project figure{margin:0}` sat *after* `.project-copy figure`, and at
+  equal specificity the later rule wins, so the small poster in mfah's copy
+  column had **no top margin at all** and sat flush against the text. The
+  reset is hoisted above it now. Watch for this if another figure rule is
+  added — put it after the reset, or it silently loses.
+
 ## Image rows and stacking
 
 `.img-row` is a grid of `repeat(var(--cols), minmax(0,1fr))`, so every cell
