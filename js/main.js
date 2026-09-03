@@ -134,24 +134,27 @@
      "Chloe Cheuk", the gap under the heading, and the band's own margin
      are all it.
 
-     These cannot be set independently. The band's margin comes out of its
-     own geometry and depends on how much room is left under the copy —
-     which depends on S — so writing S into the CSS and then reading the
+     The heading and the list are one group with its own internal spacing;
+     S is only the air above and below it, so the group sits centred
+     between the foot of the wordmark and the top of the triangles.
+
+     S cannot be set independently of the band. The band's margin comes out
+     of its own geometry and depends on how much room is left under the copy
+     — which depends on S — so writing S into the CSS and then reading the
      band's margin back would need iterating to a fixed point. Solving both
      at once instead: equal margins give
-         W - w(n-g) == Hr - r*w(1-2g/3)   with  Hr = Ph - K - 2S,
+         W - w(n-g) == Hr - r*w(1-2g/3)   with  Hr = Ph - K - S,
      and asking for that margin to equal S rearranges to
 
-         S = [ (n-g)(Ph - K) - A*W ] / [ 4(n-g) - 2A ],   A = r(1 - 2g/3)
+         S = [ (n-g)(Ph - K) - A*W ] / [ 3(n-g) - 2A ],   A = r(1 - 2g/3)
 
-     where K is everything the gap does not stretch — the foot of the
-     wordmark plus the heights of the heading and the list. n only decides
-     how big the triangles come out, so take whichever puts S nearest 50u
-     while keeping them legible. */
+     where K is where the group's foot would sit with no air above it. n
+     only decides how big the triangles come out, so take whichever puts S
+     nearest 50u while keeping them legible. */
   function contactRhythm(W, Ph, K) {
     var r = TRI_H / TRI_W, g = SHRINK, A = r * (1 - 2 * g / 3), best = null;
     for (var n = 3; n <= 14; n++) {
-      var S = ((n - g) * (Ph - K) - A * W) / (4 * (n - g) - 2 * A);
+      var S = ((n - g) * (Ph - K) - A * W) / (3 * (n - g) - 2 * A);
       if (!(S > 0)) continue;
       var w = (W - 2 * S) / (n - g);
       if (w < 150) continue;
@@ -414,18 +417,19 @@
         if (cWm && cHdr && cList && cTitle) {
           var wmB = (cWm.getBoundingClientRect().bottom - cbox.top) / u;
           var hdrB = (cHdr.getBoundingClientRect().bottom - cbox.top) / u;
-          /* K is where the copy would end with no gaps at all. Measure it
-             by taking the two gaps currently in force back off the list's
-             foot, rather than adding up heights — the list carries a
-             trailing margin inside itself, and adding heights missed it and
-             left the band's bottom margin 125u against 44u elsewhere. */
+          /* K is where the group's foot would sit with no air above it:
+             the list's foot less whatever gap is above the heading right
+             now. Measured rather than summed from heights — the list
+             carries a trailing margin inside itself, and adding heights
+             missed it and left the band's bottom margin 125u against 44u
+             everywhere else. The group's own internal spacing stays in K,
+             which is what keeps it a group. */
           var tRect = cTitle.getBoundingClientRect();
           var lRect = cList.getBoundingClientRect();
           var titleText = (tRect.top - cbox.top) / u
                         + parseFloat(getComputedStyle(cTitle).paddingTop) / u;
           var gapA = titleText - wmB;
-          var gapB = (lRect.top - tRect.bottom) / u;
-          var sol = contactRhythm(W, H, (lRect.bottom - cbox.top) / u - gapA - gapB);
+          var sol = contactRhythm(W, H, (lRect.bottom - cbox.top) / u - gapA);
           if (sol) {
             var root = document.documentElement;
             /* the wordmark hangs below the header box; the heading's own

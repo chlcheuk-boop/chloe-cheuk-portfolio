@@ -391,7 +391,9 @@ a{ color:inherit; }
   padding-top: calc((var(--cwm, 39) + var(--cgap, 50)) * var(--u));
 }
 .contact-list{
-  margin: calc(var(--cgap, 50) * var(--u)) 0 0 calc(73 * var(--u));
+  /* the heading and the list are one group; 26u is the frame's own spacing
+     inside it, and only the air above and below the group is --cgap */
+  margin: calc(26 * var(--u)) 0 0 calc(73 * var(--u));
   width: calc(624 * var(--u));
 }
 .contact-list h3{

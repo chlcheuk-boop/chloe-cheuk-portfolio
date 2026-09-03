@@ -267,28 +267,34 @@ it exact: measured 833.4 against 833.4 at 1440x845.
 
 ## The contact page's one gap
 
-Six spacings on the desktop contact page are a single number: under "Chloe
-Cheuk", under "Contact Information", between the Instagram line and the top
-of the triangles, and the band's own left, right and bottom margins.
-Measured all six equal at 1440x845 (49), 1512x845 (53) and 1920x1080 (69).
+The heading and the list are **one group**, keeping the frame's own 26u
+between them, and that group sits centred between the foot of "Chloe Cheuk"
+and the top of the triangles. The air above it, the air below it and the
+band's own left, right and bottom margins are all one number. Measured
+centred at 1440x845 (43), 1512x845 (55), 1920x1080 (72) and 1280x1024 (94).
 
-**They cannot be set independently.** The band's margin falls out of its own
-geometry and depends on the room left under the copy, which depends on the
-gap — so writing a gap into the CSS and reading the margin back would need
-iterating to a fixed point. `contactRhythm()` solves both at once instead:
-asking for the band's equal margin to equal the text gap rearranges to
+Making the heading-to-list gap that same number as well was the first
+attempt and it read wrong: it spread the group out instead of moving it.
 
-    S = [ (n-g)(Ph - K) - A*W ] / [ 4(n-g) - 2A ],   A = r(1 - 2g/3)
+**The gap cannot be set independently of the band.** The band's margin falls
+out of its own geometry and depends on the room left under the copy, which
+depends on the gap — so writing a gap into the CSS and reading the margin
+back would need iterating to a fixed point. `contactRhythm()` solves both at
+once instead: asking for the band's equal margin to equal the gap rearranges
+to
+
+    S = [ (n-g)(Ph - K) - A*W ] / [ 3(n-g) - 2A ],   A = r(1 - 2g/3)
 
 with n only deciding how big the triangles come out. JS writes S into
 `--cgap`, and `--cwm` carries the wordmark's overhang below the header box,
 which the heading's padding has to make up before the gap starts.
 
-**K is measured, not summed.** It is where the copy would end with no gaps
-at all, taken by subtracting the two gaps currently in force from the list's
-foot. Adding up the wordmark, heading and list heights instead missed the
-trailing margin inside the list and left the band's bottom margin at 125u
-against 44u everywhere else.
+**K is measured, not summed.** It is where the group's foot would sit with
+no air above it, taken by subtracting the gap currently above the heading
+from the list's foot. The group's own internal spacing stays inside K, which
+is what keeps it a group. Adding up the wordmark, heading and list heights
+instead missed the trailing margin inside the list and left the band's
+bottom margin at 125u against 44u everywhere else.
 
 Mobile is untouched: it overrides both gaps and keeps its own multi-band
 pattern from `triangleBands()`.
