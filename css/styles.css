@@ -505,12 +505,21 @@ a{ color:inherit; }
   grid-template-columns: var(--split, 1fr 1.6fr);
   column-gap: calc(40 * var(--u));
   row-gap: var(--vstep);
-  align-items:start;
+  /* stretch, not start: the copy column has to take the row's full height
+     for anything in it to be able to sit on the row's bottom edge */
+  align-items:stretch;
 }
+/* The copy column is a flex column so a figure in it (mfah's square post)
+   can be pushed to the foot and line up with the bottom of the hero
+   beside it, the way the frame has them — 269+1109 and 928+450 both land
+   on 1378. The body copy keeps a --vstep bottom margin so the gap can
+   never close up completely if the column runs out of slack. */
+.project-copy{ display:flex; flex-direction:column; }
 .project-lede{ max-width: calc(1150 * var(--u)); margin: 0 0 var(--vstep); }
 .project-copy .body-copy p{ margin: 0 0 calc(22 * var(--u)); }
 .project-copy .body-copy p:last-child{ margin-bottom:0; }
-.project-copy figure{ margin: var(--vstep) 0 0; }
+.project-copy .body-copy{ margin-bottom: var(--vstep); }
+.project-copy > figure{ margin: auto 0 0; }
 
 
 /* three steps, so a new section still reads as a break in the same rhythm */
@@ -666,6 +675,10 @@ a{ color:inherit; }
   .project-copy .body-copy, .project-lede, .project-caption, .figma-link{ font-size: calc(15 * var(--u)); }
   .project-copy .body-copy p{ margin-bottom: calc(14 * var(--u)); }
   .project-intro--split{ grid-template-columns: minmax(0, 1fr); column-gap:0; }
+  /* stacked on a phone, so nothing to bottom-align against */
+  .project-copy{ display:block; }
+  .project-copy .body-copy{ margin-bottom:0; }
+  .project-copy > figure{ margin: var(--vstep) 0 0; }
   .project-section > .section-title{ font-size: calc(22 * var(--u)); }
   /* every row stacks, each image the same width, aspect ratio kept */
   .img-row, .img-row.cols-2, .img-row.cols-3{ --cols:1; }
