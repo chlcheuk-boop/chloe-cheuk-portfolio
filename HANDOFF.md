@@ -287,50 +287,44 @@ horizontally.
 Note this is deliberate per the request: a stacked portrait image fills the
 full column width, so the 396x704 JSA story graphics get tall on a phone.
 
-## The name plate always clears the bottom
+## Home: one scale, covering, anchored to the bottom
 
-The frame puts the name plate only 15u above its own bottom edge, so
-fitting the frame exactly to the window left "Chloe Cheuk" about 12px off
-the bottom of the screen — the first thing the user flagged on a 14in
-MacBook. `--u` now fits against `100vh - 96px`, reserving 48px top and
-bottom. The reserve is in px on purpose: in --u it would scale away on
-exactly the short windows that need it. Measured 59-61px of clearance at
-1512x845, 1512x982, 1440x900 and 2560x900.
+`--u` on the home page is `max(100vw/1440, 100vh/1060)` — cover — and the
+plates and the shapes both ride on it. **They must share a scale.** The
+shapes are placed *against* the plates, so an earlier attempt to fit the
+plates and cover the shapes left the plates looking small and stranded
+among oversized shapes, which is what the user flagged from a screenshot.
 
-`coverLayer()` is handed the measured `--u` rather than recomputing the fit
-from the viewport, so the CSS formula and the scale can never drift apart.
+The frame is then taller than a wide window, and `.home-stage` is anchored
+`bottom: 48px` rather than centred, because the design's content sits low
+in the frame: the name plate ends 15u above the frame's bottom edge while
+the top of the frame is mostly shapes bleeding off. Centring the overflow
+cropped the name plate; cropping the empty top instead keeps it, and the
+48px holds it off the window's edge. Measured 60-75px of clearance from
+1100x700 up to 2560x1440.
 
-## Home fills the window
+`paintVectors` reads the frame origin off `.home-stage` rather than
+centring its own copy — with the stage bottom-anchored, shapes centred
+independently would sit in a different frame from the plates.
 
-The composition is still laid out to FIT (`--u` unchanged), and then
-`coverLayer()` scales the whole vector layer about its centre by exactly
-cover/fit, so the shapes reach every edge while holding their positions
-relative to one another. The layout maths never sees the transform, so it
-cannot be thrown off by it. `body[data-page="home"]` is `overflow:hidden`
-above 1024 to clip the scaled layer instead of scrolling it. Mobile is
-untouched — the transform is cleared there.
+**Known edge cases, both inherent to covering.** At about 2.8:1 and wider
+(2560x900) the nav plate's top corner goes 157px off the top; at 1.25:1 and
+narrower (1280x1024) the name plate's right corner clips by 27px, which is
+padding rather than text. Everything from 1100x700 through 1920x1080 and
+2560x1440 is clean, with no white band on any edge and no scrolling.
 
-Two approaches were tried and rejected first, both measured:
+Approaches tried and rejected before this, all measured:
 
-- **`--u: max(...)`, i.e. cover everything.** Cover crops from the bottom
-  and the name plate sits low in the frame, so "Chloe Cheuk" lost 61% of
-  itself at 1440x900, 73% at 1920x1080, and 113% — all of it — at 2560x900.
-- **Two scales, `--u` fit for the plates and `--uv` cover for the shapes.**
-  The plates then no longer sit where the shapes' frame expects them, so
-  `space()` shoved six of the seven shapes off the top of the screen.
-
-The lesson for anything similar: the shapes are positioned *against the
-plates*, so the two cannot be given different scales. Scaling the finished
-layer is the only way to change its coverage without disturbing it.
-
-Verified at 1440x900, 1920x1080, 2560x900 and 1200x1000: no white band on
-any edge, both plates fully on screen (all four corners of each, tested as
-true rotated rectangles), no scrolling in either axis.
-
-**Measure resting positions, not live rects.** In a background iframe the
-intro animation is throttled, and `getBoundingClientRect` mid-flight
-reported a 583px white band at the bottom that was not real. Force
-`.intro-done` and clear `animation`/`translate` first, or read `--place`.
+- **Fit everything** (the original): white bands down the sides, ~180px
+  each on a 14in MacBook.
+- **Cover everything, centred**: the name plate lost 61% of itself at
+  1440x900 and all of it at 2560x900.
+- **Fit the plates, cover the shapes via two units**: the plates no longer
+  sat where the shapes' frame expected them and `space()` pushed six of the
+  seven shapes off the top.
+- **Fit everything, then scale the finished vector layer to cover**: kept
+  the plates safe and killed the white bands, but the shapes ran 1.3-2.3x
+  the plates and the composition read wrong.
 
 ## Still open — iPad / iPhone 1:1 replica
 

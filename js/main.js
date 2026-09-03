@@ -467,7 +467,19 @@
            offsetting both first and settling in viewport coordinates gives
            the same answer as settling in the frame's — the layout is the
            same fraction of the frame at every window size. */
-        var offX = (W - 1440) / 2, offY = (H - 1060) / 2;
+        /* Read the frame's origin off the stage rather than centring a
+           copy of it here: the stage is anchored to the bottom of the
+           window, and shapes centred independently would sit in a
+           different frame from the plates they are placed against. */
+        var stageEl = document.querySelector('.home-stage');
+        var offX, offY;
+        if (stageEl) {
+          var sb = stageEl.getBoundingClientRect(), hb = host.getBoundingClientRect();
+          offX = (sb.left - hb.left) / u;
+          offY = (sb.top - hb.top) / u;
+        } else {
+          offX = (W - 1440) / 2; offY = (H - 1060) / 2;
+        }
         items = HOME_FIGMA.map(function (it) {
           return { s: it.s, cx: it.cx + offX, cy: it.cy + offY, size: it.size, rot: it.rot };
         });
@@ -536,28 +548,6 @@
 
     layer.innerHTML = items.map(svgFor).join('');
     applyPlacement(layer);
-    coverLayer(layer, page, mob, u);
-  }
-
-  /* The composition is laid out to FIT the window, which leaves white bands
-     down the sides of anything wider than 1440:1060. Blow the whole vector
-     layer up about its centre by exactly the ratio of cover to fit, so the
-     shapes reach every edge while keeping their positions relative to one
-     another — the layout maths never sees this, so it cannot be thrown off.
-
-     The plates are deliberately left on the fit scale. Scaling them to
-     cover as well was measured: cover crops from the bottom and the name
-     plate sits low in the frame, so "Chloe Cheuk" lost 61% of itself at
-     1440x900 and all of itself past about 2300px wide. */
-  function coverLayer(layer, page, mob, fit) {
-    if (page !== 'home' || mob) { layer.style.transform = ''; return; }
-    var w = window.innerWidth, h = window.innerHeight;
-    /* `fit` is the measured --u, not a second copy of the CSS formula —
-       the two drifting apart would scale the layer by the wrong amount. */
-    var cover = Math.max(w / 1440, h / 1060);
-    if (!(fit > 0)) { layer.style.transform = ''; return; }
-    layer.style.transformOrigin = '50% 50%';
-    layer.style.transform = 'scale(' + (cover / fit).toFixed(4) + ')';
   }
 
   /* ---------- home intro ----------

@@ -31,12 +31,18 @@
 /* The home screen is one fixed composition, so it scales to FIT the
    window — that keeps the name and the nav fully visible, never scrolled. */
 body[data-page="home"]{
-  /* Fit the frame inside the window but keep 48px clear top and bottom.
-     The frame puts the name plate only 15u above its own bottom edge, so
-     fitting it exactly to the window left "Chloe Cheuk" sitting on the
-     bottom edge — about 12px clear on a short window. Reserving the margin
-     in px rather than in --u means it cannot scale away. */
-  --u: min(calc(100vw / 1440), calc((100vh - 96px) / 1060));
+  /* COVER, and one scale for the whole composition. The plates and the
+     shapes are one drawing — the shapes are placed against the plates —
+     so giving them different scales leaves the plates looking small and
+     stranded among oversized shapes. Everything rides on --u together.
+
+     The frame is then taller than a wide window, and it is anchored to the
+     BOTTOM rather than centred, because the design's content sits low in
+     it: the name plate ends 15u above the frame's bottom edge while the
+     top of the frame is mostly shapes bleeding off. Centring the overflow
+     cropped the name; cropping the empty top instead keeps it. The 48px
+     holds it off the window's own edge. */
+  --u: max(calc(100vw / 1440), calc(100vh / 1060));
 }
 /* the vector layer is scaled past the viewport to cover it (see
    coverLayer in main.js); clip that rather than letting it scroll */
@@ -153,10 +159,10 @@ a{ color:inherit; }
 
 .home-stage{
   position:absolute;
-  left:50%; top:50%;
+  left:50%; bottom: 48px;
   width:  calc(1440 * var(--u));
   height: calc(1060 * var(--u));
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   z-index:1;
 }
 
@@ -613,6 +619,9 @@ a{ color:inherit; }
   .home-stage{
     width:  calc(390 * var(--u));
     height: calc(806 * var(--u));
+    /* the phone frame fits the screen, so centre it again */
+    top:50%; bottom:auto;
+    transform: translate(-50%, -50%);
   }
   /* the phone composition from the mockup: a wide name plate tilted
      across the upper third, and a tilted nav square below and right */
