@@ -287,6 +287,38 @@ horizontally.
 Note this is deliberate per the request: a stacked portrait image fills the
 full column width, so the 396x704 JSA story graphics get tall on a phone.
 
+## Home fills the window
+
+The composition is still laid out to FIT (`--u` unchanged), and then
+`coverLayer()` scales the whole vector layer about its centre by exactly
+cover/fit, so the shapes reach every edge while holding their positions
+relative to one another. The layout maths never sees the transform, so it
+cannot be thrown off by it. `body[data-page="home"]` is `overflow:hidden`
+above 1024 to clip the scaled layer instead of scrolling it. Mobile is
+untouched — the transform is cleared there.
+
+Two approaches were tried and rejected first, both measured:
+
+- **`--u: max(...)`, i.e. cover everything.** Cover crops from the bottom
+  and the name plate sits low in the frame, so "Chloe Cheuk" lost 61% of
+  itself at 1440x900, 73% at 1920x1080, and 113% — all of it — at 2560x900.
+- **Two scales, `--u` fit for the plates and `--uv` cover for the shapes.**
+  The plates then no longer sit where the shapes' frame expects them, so
+  `space()` shoved six of the seven shapes off the top of the screen.
+
+The lesson for anything similar: the shapes are positioned *against the
+plates*, so the two cannot be given different scales. Scaling the finished
+layer is the only way to change its coverage without disturbing it.
+
+Verified at 1440x900, 1920x1080, 2560x900 and 1200x1000: no white band on
+any edge, both plates fully on screen (all four corners of each, tested as
+true rotated rectangles), no scrolling in either axis.
+
+**Measure resting positions, not live rects.** In a background iframe the
+intro animation is throttled, and `getBoundingClientRect` mid-flight
+reported a 583px white band at the bottom that was not real. Force
+`.intro-done` and clear `animation`/`translate` first, or read `--place`.
+
 ## Still open — iPad / iPhone 1:1 replica
 
 The user's earlier request was that **the iPad and iPhone home screens be

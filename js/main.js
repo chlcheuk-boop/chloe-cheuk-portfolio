@@ -536,6 +536,27 @@
 
     layer.innerHTML = items.map(svgFor).join('');
     applyPlacement(layer);
+    coverLayer(layer, page, mob);
+  }
+
+  /* The composition is laid out to FIT the window, which leaves white bands
+     down the sides of anything wider than 1440:1060. Blow the whole vector
+     layer up about its centre by exactly the ratio of cover to fit, so the
+     shapes reach every edge while keeping their positions relative to one
+     another — the layout maths never sees this, so it cannot be thrown off.
+
+     The plates are deliberately left on the fit scale. Scaling them to
+     cover as well was measured: cover crops from the bottom and the name
+     plate sits low in the frame, so "Chloe Cheuk" lost 61% of itself at
+     1440x900 and all of itself past about 2300px wide. */
+  function coverLayer(layer, page, mob) {
+    if (page !== 'home' || mob) { layer.style.transform = ''; return; }
+    var w = window.innerWidth, h = window.innerHeight;
+    var fit   = Math.min(w / 1440, h / 1060);
+    var cover = Math.max(w / 1440, h / 1060);
+    if (!(fit > 0)) { layer.style.transform = ''; return; }
+    layer.style.transformOrigin = '50% 50%';
+    layer.style.transform = 'scale(' + (cover / fit).toFixed(4) + ')';
   }
 
   /* ---------- home intro ----------

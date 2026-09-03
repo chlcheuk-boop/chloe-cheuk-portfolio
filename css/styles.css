@@ -33,6 +33,11 @@
 body[data-page="home"]{
   --u: min(calc(100vw / 1440), calc(100vh / 1060));
 }
+/* the vector layer is scaled past the viewport to cover it (see
+   coverLayer in main.js); clip that rather than letting it scroll */
+@media (min-width:1025px){
+  body[data-page="home"]{ overflow:hidden; }
+}
 
 /* The about page drives its photograph and starburst off the available
    HEIGHT, so the starburst always fills the bottom-right corner and the
