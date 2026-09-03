@@ -202,15 +202,21 @@ a{ color:inherit; }
    WORK  (Figma "Desktop - 2")
    ============================================================ */
 .work-wrap{
-  /* One gap, used everywhere: the margin round the grid and the space
-     between every tile are all --gap, so the spacing reads as even on
-     all four sides. Column ratios below are solved for that gap so the
-     tall tile still lines up with the two stacked beside it. */
-  --gap: calc(34 * var(--u));
+  /* The grid is the full-width layout scaled down by --k, which leaves
+     the wider left and right margins. Everything inside scales with it,
+     --gap included: the split-row column ratios are solved against the
+     ratio of gap to row width, so shrinking the row while holding the gap
+     fixed would stop the tall tile lining up with the two stacked beside
+     it. Scaling both keeps that ratio, and the alignment, exact. */
+  --k: 0.758;
+  --gap: calc(34 * var(--k) * var(--u));
   position:relative;
   z-index:1;
-  margin: 0 var(--gap) var(--gap);
-  padding-top: var(--gap);
+  width: calc(1372 * var(--k) * var(--u));
+  margin: 0 auto var(--gap);
+  /* not --gap: the tiles need real air under the header, and 96u is the
+     same drop the project pages put below theirs */
+  padding-top: calc(96 * var(--u));
   display:flex;
   flex-direction:column;
   gap: var(--gap);
@@ -478,8 +484,10 @@ a{ color:inherit; }
 .project{
   position:relative;
   z-index:1;
-  /* 96u below the header puts the title on the frame's own 269 line */
-  padding: calc(96 * var(--u)) calc(89 * var(--u)) calc(150 * var(--u));
+  /* 96u below the header puts the title on the frame's own 269 line.
+     The side inset is wider than the frame's own 89u so the images run
+     narrower and leave air down both edges, matching the work grid. */
+  padding: calc(96 * var(--u)) calc(200 * var(--u)) calc(150 * var(--u));
   /* One step for every gap in the title -> copy -> image rhythm. Each of
      those gaps is a margin on the element above it and nothing else, so
      they all resolve to exactly this and stay even. */
@@ -493,20 +501,21 @@ a{ color:inherit; }
 .project figure{ margin:0; }
 .project img{
   display:block;
-  width:100%;
+  /* Sized so a whole image fits on screen: it takes its column, but never
+     more than --imgmax of the window's height, and width:auto then lets it
+     narrow to keep its aspect ratio. width:100% with object-fit was doing
+     the same visually but kept a full-width box with dead space beside the
+     picture, which made rows look ragged. Above about 2670px of window the
+     column outgrows the images' own 2000px and they stop scaling, which is
+     the right thing — upscaling them would only blur. */
+  width:auto;
+  max-width:100%;
   height:auto;
-  /* A portrait image at full column width runs to two or three screens, so
-     cap how tall any one of them gets. The cap is proportional to the page
-     rather than the viewport, which is what keeps it off the landscape
-     boards: the tallest of those is 991/1283 of its column, about 975u at
-     1440, so it stays full width and only genuinely vertical images shrink.
-     A shrunk image sits at the left of its box instead of stretching. */
-  max-height: var(--imgmax, calc(1000 * var(--u)));
-  object-fit: contain;
-  object-position: left top;
+  max-height: var(--imgmax, 80vh);
 }
-/* the hero beside the copy keeps its frame's proportions and its column */
-.project-intro--split > figure img{ max-height:none; }
+/* The hero beside the copy is capped like every other image. It used to
+   be exempt, to hold its frame's column exactly, but that let it run past
+   the bottom of the window — opencall's was 885px tall in an 845px one. */
 
 /* Two intro shapes from the Figma frames: copy beside a portrait hero, or
    copy above a full-width one. --split carries each page's own column

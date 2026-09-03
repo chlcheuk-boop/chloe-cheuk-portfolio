@@ -243,30 +243,42 @@ The copy-to-post gap is therefore whatever bottom alignment needs (185u at
 both hold there. On a phone the columns stack, so the copy column reverts to
 plain flow and the gap is `--vstep` like everywhere else.
 
+## How wide the work pages run
+
+Both the work grid and the project columns are 1040u of the 1440u page,
+with 200u down each side, so the images run narrower and leave air on both
+edges. Tiles and images also drop 96u below the header rather than sitting
+right under it.
+
+**The work grid is scaled, not just inset.** `--k` (0.758) multiplies the
+grid's width *and* its `--gap` together. The split row's column ratios
+(796.1fr : 541.9fr) were solved against the ratio of gap to row width, so
+narrowing the row while holding the gap fixed would stop the tall tile
+lining up with the two stacked beside it — about 8u out. Scaling both keeps
+it exact: measured 833.4 against 833.4 at 1440x845.
+
 ## Capping tall images
 
-A portrait image at full column width ran to two or three screens — the
-opencall variant was 1634u tall, and the JSA story graphics reached 1713u
-once a three-up row stacked. `.project img` now caps at `--imgmax`
-(1000u), with `object-fit:contain` and `object-position:left top`, so a
-too-tall image shrinks and sits at the left of its box rather than
-stretching.
+The brief is that a whole image should be visible without scrolling, so
+`--imgmax` is `80vh` — a share of the window, not of the page. `.project
+img` is `width:auto; max-width:100%; max-height:var(--imgmax)`, so an image
+takes its column unless that would make it taller than the cap, and then
+narrows to keep its aspect ratio.
 
-The cap is **proportional to the page, not the viewport**, and that is the
-point: the tallest landscape board is 991/1283 of its column, about 975u at
-full width, so it stays under the cap untouched and only genuinely vertical
-images shrink. A `vh` cap would have shaved every board as well. The box
-keeps `width:100%` rather than switching to `width:auto` so that a column
-wider than the image's own 2000px — which happens past about 2280px of
-window — still fills.
+`width:auto` rather than `width:100%` with `object-fit`: both look the same
+where the cap bites, but object-fit kept a full-width box with dead space
+beside the picture, which made rows look ragged. The cost is that past
+about 2670px of window the column outgrows the images' own 2000px and they
+stop scaling — which is the right thing, since upscaling would only blur.
 
-The hero beside the copy on a split page is exempt (`max-height:none`); it
-keeps its frame's column and proportions.
+Nothing is exempt any more. The hero beside the copy used to be, to hold
+its frame's column exactly, but that let opencall's run 885px tall in an
+845px window.
 
 Note this trades against the equal-width rule below: a stacked portrait no
-longer fills the same width as a stacked landscape. That is deliberate, and
-only bites on desktop — at phone widths the column is narrow enough that
-nothing reaches the cap, so stacked images there are still equal width.
+longer fills the same width as a stacked landscape, and a capped image
+leaves space to its right. Deliberate, and it mostly bites on desktop —
+at phone widths the column is narrow enough that little reaches the cap.
 
 ## Image rows and stacking
 
