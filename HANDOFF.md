@@ -458,13 +458,23 @@ d", "Swif t"), so it needs reading rather than pasting.
 **The line is Instrument Sans** (`var(--sans)`), the site's own sans, which
 keeps it distinct from the serif titles.
 
-## Home links point at the directory
+## URLs carry no .html
 
-Every "home" link and wordmark is `href="./"` rather than `href="index.html"`,
-so the URL reads as the bare site root. `./` and not `/`: on GitHub Pages
-the site lives under `/chloe-cheuk-portfolio/`, and a root-absolute link
-would jump to the domain root and 404. All the pages sit in one directory,
-so `./` resolves the same from any of them.
+Every page except the home one lives in a directory of its own —
+`about/index.html`, `work/index.html`, `work-mfah/index.html` — so it is
+served at `/about/`, `/work/`, `/work-mfah/`. GitHub Pages has no rewrite
+rules, so a directory with an index is the only way to drop the extension
+that does not depend on host behaviour; it also works under the local
+`serve.py`, which is what let it be checked here.
+
+Everything is linked **relatively**, never root-absolute: on Pages the site
+sits under `/chloe-cheuk-portfolio/`, so a leading `/` would jump to the
+domain root. From a page's own directory that means `../` for home,
+`../work/` for a sibling, and `../css/`, `../js/`, `../images/` for assets.
+The home page is still at the root, so its links have no `../`.
+
+**Adding a page:** make `slug/index.html`, give its assets `../`, and set
+its `og:url` to `BASE/slug/`.
 
 ## Link preview
 

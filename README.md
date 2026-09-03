@@ -1,13 +1,21 @@
 # Chloe Cheuk — portfolio
 
-Static site. No build step: open `index.html`, or serve the folder
-(`python3 -m http.server`).
+Static site, no build step. Serve the folder — `python3 serve.py`, then
+<http://127.0.0.1:4173>. Opening `index.html` from the filesystem works for
+the home page, but every other page now lives in its own directory, so the
+links between them need a server.
 
 ```
-index.html      home      work.html   work
-about.html      about me  contact.html contact
-css/styles.css  js/main.js  images/
+index.html                 home, served at /
+about/  contact/  work/    an index.html each, so /about/, /contact/, /work/
+work-<slug>/               nine project pages, one per work tile
+css/styles.css   js/main.js   images/   serve.py
 ```
+
+URLs carry no `.html`: a directory with an `index.html` is the only way to
+drop the extension on GitHub Pages, which has no rewrite rules. Links
+between pages are relative (`../work/`), never root-absolute, because the
+site sits under a repository path on Pages.
 
 ## Design tokens (read out of the Figma file, not eyeballed)
 
@@ -55,7 +63,7 @@ elements reproduce the Figma matrices (`18.74°` name, `-40.70°` nav,
 5. Home intro: vectors drop into place (staggered), the name rises and the
    nav drops in. Respects `prefers-reduced-motion`.
 6. Work tiles show a rounded caption below-right of the cursor
-   (`data-project` / `data-roles` in `work.html`).
+   (`data-project` / `data-roles` in `work/index.html`).
 7. Work tiles scale to 1.022 on hover.
 
 ## Vector placement
@@ -210,7 +218,7 @@ including the tilted-plate home composition.
 ## The work page has no background
 
 The circles were removed: they never sat well against the tiles across
-window sizes. `work.html` has no `.vectors` layer, and `scatter()` — the
+window sizes. `work/index.html` has no `.vectors` layer, and `scatter()` — the
 hex-lattice-plus-gap-filling placer that drew them — went with it, since
 the work page was its only caller.
 
