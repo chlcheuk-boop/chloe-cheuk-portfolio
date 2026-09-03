@@ -261,15 +261,18 @@ it exact: measured 833.4 against 833.4 at 1440x845.
 
 The brief is that a whole image should be visible without scrolling, so
 `--imgmax` is `80vh` — a share of the window, not of the page. `.project
-img` is `width:auto; max-width:100%; max-height:var(--imgmax)`, so an image
-takes its column unless that would make it taller than the cap, and then
-narrows to keep its aspect ratio.
+img` is `width:100%; max-height:var(--imgmax)` with `object-fit:contain`
+and `object-position:left top`, so the box takes its column but is never
+taller than the cap, and the picture letterboxes inside it at its own
+aspect ratio, left-aligned.
 
-`width:auto` rather than `width:100%` with `object-fit`: both look the same
-where the cap bites, but object-fit kept a full-width box with dead space
-beside the picture, which made rows look ragged. The cost is that past
-about 2670px of window the column outgrows the images' own 2000px and they
-stop scaling — which is the right thing, since upscaling would only blur.
+**The box must keep `width:100%`.** Sizing it to the picture with
+`width:auto` was tried and it broke lazy loading: an image that has not
+loaded has no definite width to size from, so every one collapsed to 0x0,
+reserved no space, and the page had no height. With `width:100%` the
+width/height attributes give the box its ratio up front — measured 325x578
+reserved per JSA story graphic before any had loaded. Only the horizontal
+remainder is dead space, and it is white, so it looks the same either way.
 
 Nothing is exempt any more. The hero beside the copy used to be, to hold
 its frame's column exactly, but that let opencall's run 885px tall in an
@@ -289,13 +292,12 @@ aspect ratio. `minmax(0,1fr)` rather than `1fr` matters: `1fr` is
 `minmax(auto,1fr)` and a wide image would refuse to shrink below its
 intrinsic width and overflow the row.
 
-A three-up row runs out of room before a two-up, so it collapses first, at
-1200px; below the site's own 1024 breakpoint every row is stacked. Verified
-by measuring in an iframe at 1440, 1200, 1100, 1000, 768 and 390: columns
-go 3->1 and 2->2->1 as expected, every row reports one distinct width, every
-image holds its aspect ratio to within 2%, and no page overflows
+Rows stack only at the site's own 1024 breakpoint. A three-up row used to
+collapse at 1200 as well, but the only one is the JSA Instagram stories,
+which should read as a set across the row at any desktop width. Verified at
+1440, 1200, 1100 and 1025 (three columns, one row, equal widths) and at
+1000 and 390 (stacked), with aspect ratios holding and no page overflowing
 horizontally.
-
 Note this is deliberate per the request: a stacked portrait image fills the
 full column width, so the 396x704 JSA story graphics get tall on a phone.
 
