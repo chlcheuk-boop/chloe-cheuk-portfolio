@@ -63,28 +63,19 @@ elements reproduce the Figma matrices (`18.74°` name, `-40.70°` nav,
 | page | desktop | mobile |
 |---|---|---|
 | home | the exact Figma collage (3 starbursts, 3 circles, 1 triangle) | six large shapes from the mockup, one off each edge |
-| work | circles only — 605 wide at 1440 (0.42 of the page), well spread | circles only |
+| work | none — the tiles sit on white | none |
 | about | one starburst, on the photo's bottom-right corner | same |
 | contact | one interlocking band under the copy, even margins all round | same interlocking pattern, smaller, filling everything below the copy |
 
-`scatter()` in `js/main.js` lays shapes out in two passes:
+Every placement is now a fixed composition rather than a generated one:
+the home collage and the contact band both come from the Figma frames. The
+generated scatter that used to draw the work page's circles is gone with
+them.
 
-1. **An even hexagonal lattice** — cell = one shape plus its gap, every
-   other row offset half a cell, each centre nudged off the lattice by
-   `jitter` (a small fraction of a cell) so it reads hand-placed rather
-   than gridded.
-2. **A gap-filling sweep** at half-cell steps that drops a shape into any
-   hole the lattice left. The spacing tests still apply, so anything it
-   adds is a full gap from its neighbours — it removes empty patches
-   without crowding.
-
-Throughout, no two shapes overlap, no two of the same kind are
-neighbours (skipped when a page uses one kind, as work does), and
-keep-out rectangles stay clear — on the home screen the name and nav
-plates, tested as true rotated rectangles rather than bounding boxes,
-padded by the same gap used between shapes so the spacing reads evenly
-across shapes *and* rectangles. The lattice starts far enough off-frame
-that solid shape bodies, not just spike tips, run over every edge.
+Shapes still settle against keep-out rectangles — on the home screen the
+name and nav plates, tested as true rotated rectangles rather than bounding
+boxes, padded by the same gap used between shapes so the spacing reads
+evenly across shapes *and* rectangles.
 
 Figma rotates a node about its top-left corner, so `HOME_FIGMA` converts
 each box origin to a true centre by pushing the box centre through the
@@ -151,6 +142,77 @@ shallow window shave the band into a sawtooth strip of small ones.
 
 Measured at 1440x900: 5 upright and 4 inverted, every one 249u wide, the
 four margins all 54.3u, one bottom line and one top line.
+
+## Home always fits
+
+The home screen is a fixed composition — 1440 x 1060 on desktop,
+390 x 780 on a phone — scaled to *fit* the window and centred:
+
+```css
+body[data-page="home"]{ --u: min(calc(100vw / 1440), calc(100vh / 1060)); }
+```
+
+so the name and nav plates are always fully visible, never scrolled. Both
+plates wrap their own text, so they size themselves to however many nav
+links they hold. On a phone they keep the same rotated-rectangle
+treatment as the desktop composition.
+
+## The about page
+
+The photograph and starburst are driven by `--au`, taken from the
+available height but never wider than the Figma frame allows:
+
+```css
+--au: min(calc((100vh - var(--header-h)) / 851), calc(100vw / 1440));
+```
+
+The photo and the copy column both span one band, centred in the space
+under the header, so the gap from the header down to "Who I am" and to the
+top of the photo is the same as the gap from "Read My CV Here" and the
+foot of the photo down to the bottom of the page — four equal gaps. The
+column is a flex column with the CV link pushed to its foot, which keeps
+that link exactly level with the bottom of the photo. Its type and spacing
+are a fixed fraction of its own width (`--acol`) so the block keeps the
+Figma proportions and always fits. The starburst hangs off the photo's
+corner by a fixed ratio, so it always runs past the page's bottom-right
+corner.
+
+On a phone the column stacks, and the gap under "Chloe Cheuk" matches the
+gap between "Read My CV Here" and the photograph.
+
+## Animation
+
+Each home vector travels in, overshoots its mark, bounces back and
+settles — driven by keyframes (`vec-fall`, `vec-from-left`,
+`vec-from-right`) that ride on the `translate` property, so the element's
+own `transform` (its Figma position and rotation) is untouched.
+
+- **Desktop** — they fall from above.
+- **Phone** — each slides in from whichever side it sits nearer to; JS
+  tags every shape `data-from="left|right"` and CSS picks the matching
+  keyframes.
+
+The two plates only *shift* into place — no bounce: the name rises, the
+nav drops, both on a plain ease-out.
+Once it has played, `.intro-done` disables the animation so a resize
+repaint can't replay it. Honours `prefers-reduced-motion`, and falls back
+to a timeout if `requestAnimationFrame` is throttled (background tab).
+
+Note: the home page has no images, so `load` fires almost immediately —
+repainting the vectors there would tear the intro down mid-flight, so
+only pages whose height depends on images get that second pass.
+
+## Breakpoint
+
+Phones **and tablets** (≤ 1024px) get the phone treatment throughout,
+including the tilted-plate home composition.
+
+## The work page has no background
+
+The circles were removed: they never sat well against the tiles across
+window sizes. `work.html` has no `.vectors` layer, and `scatter()` — the
+hex-lattice-plus-gap-filling placer that drew them — went with it, since
+the work page was its only caller.
 
 ## Home always fits
 

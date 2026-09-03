@@ -201,13 +201,21 @@ scratchpad if a bigger export is ever wanted.
 column ratio from its frame in `--split`. `.project` has 96u of top
 padding so the title lands on the frame's own 269 line.
 
-## Work page: header kept clear
+## The work page has no background
 
-The work page's circles take a `keepOut` rect covering everything above the
-header's bottom edge, measured off the header element itself (its height
-differs on a phone) and running a page width past each side so a circle
-bleeding in from the edge is caught too. Verified: 11 circles at 1440 and
-15 at 375, none reaching into the header band.
+The circles are gone from the work page — they never sat well against the
+tiles across window sizes. `work.html` carries no `.vectors` layer at all,
+so `paintVectors` returns at its first line there.
+
+`scatter()` and `mulberry32()` went with them: the work page was their only
+caller, so both were dead once the circles were dropped, together with the
+header keep-out rect that had been added to hold circles off the wordmark.
+That is about 140 lines. All of it is in the history if the pattern is ever
+wanted back — the lattice, the gap-filling sweep and the tuning notes are
+in the commit that removed it.
+
+`.vectors` still carries the home collage and the contact tessellation, and
+about keeps an empty layer (its starburst lives in the markup).
 
 ## Project page spacing
 

@@ -152,113 +152,6 @@
     return out;
   }
 
-  /* ---------- deterministic RNG, so a repaint is stable ---------- */
-  function mulberry32(a) {
-    return function () {
-      a |= 0; a = a + 0x6D2B79F5 | 0;
-      var t = Math.imul(a ^ a >>> 15, 1 | a);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-  }
-
-  /* ============================================================
-     Scatter — fills W x H (design units) with shapes such that
-       - no two shapes overlap
-       - two of the same kind are never neighbours (when mixed)
-       - nothing intrudes on a keep-out rectangle
-     ============================================================ */
-  function scatter(W, H, o) {
-    var types  = o.types || ['star', 'circle', 'triangle'];
-    var scale  = o.scale || 1;
-    var gap    = o.gap != null ? o.gap : 34 * scale;
-    var keepOut = o.keepOut || [];
-    var rand   = mulberry32(o.seed || 7);
-
-    var big  = 599 * scale;
-    /* Cell = one shape plus its gap, so centres land on an even lattice;
-       `jitter` then nudges each one off the lattice by a fraction of a
-       cell — enough to look hand-placed, little enough to stay evenly
-       spaced. jitter 1 = the old fully-random placement. */
-    var cell = o.cell || (big + gap);
-    var jitter = o.jitter != null ? o.jitter : 1;
-    var bleed = o.bleed != null ? o.bleed : (cell / 2 + big * 0.25);
-    /* only meaningful when more than one kind is in play */
-    var sameMin = types.length > 1 ? (o.sameMin || big * 1.48) : 0;
-
-    var placed = [], order = 0;
-    function radius(t) { return SHAPES[t].size / 2 * scale; }
-
-    /* distance from a circle to a rotated rectangle */
-    function clearsKeepOut(cx, cy, r) {
-      for (var i = 0; i < keepOut.length; i++) {
-        var k = keepOut[i];
-        var th = (k.rot || 0) * Math.PI / 180;
-        var c = Math.cos(th), s = Math.sin(th);
-        var dx = cx - k.x, dy = cy - k.y;
-        var lx =  dx * c + dy * s;          /* into the rect's own frame */
-        var ly = -dx * s + dy * c;
-        var qx = Math.max(0, Math.min(k.w, lx));
-        var qy = Math.max(0, Math.min(k.h, ly));
-        var ex = lx - qx, ey = ly - qy;
-        if (Math.sqrt(ex * ex + ey * ey) < r + (k.pad || 0)) return false;
-      }
-      return true;
-    }
-
-    function fits(t, cx, cy) {
-      var r = radius(t);
-      if (!clearsKeepOut(cx, cy, r)) return false;
-      for (var i = 0; i < placed.length; i++) {
-        var p = placed[i];
-        var d = Math.sqrt((cx - p.cx) * (cx - p.cx) + (cy - p.cy) * (cy - p.cy));
-        if (d < r + radius(p.s) + gap) return false;      /* would overlap */
-        if (sameMin && p.s === t && d < sameMin) return false;
-      }
-      return true;
-    }
-
-    function tryAt(cx, cy) {
-      var start = order % types.length;
-      for (var k = 0; k < types.length; k++) {
-        var t = types[(start + k) % types.length];
-        if (fits(t, cx, cy)) {
-          placed.push({
-            s: t, cx: cx, cy: cy,
-            size: SHAPES[t].size * scale,
-            rot: t === 'triangle' ? (order % 2 ? 180 : 0) : 0
-          });
-          order++;
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /* Pass 1 — an even hexagonal lattice: every other row is offset half
-       a cell, which spreads shapes far more evenly than a plain grid. */
-    var rowH = cell * 0.866, row = 0;
-    for (var gy = -bleed; gy < H + bleed; gy += rowH, row++) {
-      var stagger = (row % 2) ? cell / 2 : 0;
-      for (var gx = -bleed - stagger; gx < W + bleed; gx += cell) {
-        tryAt(gx + cell / 2 + (rand() - 0.5) * cell * jitter,
-              gy + cell / 2 + (rand() - 0.5) * cell * jitter);
-      }
-    }
-
-    /* Pass 2 — sweep a finer grid and drop a shape into any hole the
-       lattice left (next to the plates, say). The spacing tests still
-       apply, so anything added is still a full gap from its neighbours;
-       this only removes empty patches, it never crowds them. */
-    var fine = cell / 2;
-    for (var fy = -bleed; fy < H + bleed; fy += fine) {
-      for (var fx = -bleed; fx < W + bleed; fx += fine) {
-        tryAt(fx + fine / 2, fy + fine / 2);
-      }
-    }
-    return placed;
-  }
-
   /* ============================================================
      Interlocking up/down triangle bands, filling yTop..yBottom.
      One band = a row of upright triangles interlocking with a row
@@ -511,39 +404,9 @@
       }
 
     } else {
-      /* work — fewer, larger circles on an even lattice */
-      /* Desktop: circles a little under half the page wide, well spread —
-         about one every two-and-a-bit page widths of scroll, most running
-         off an edge with a few sitting whole in the middle.
-
-         `cell` is set below `big + gap` on purpose: at this size the page
-         is only about one cell wide, so leaving the lattice to the gap
-         alone skipped rows and left a 1754u band of nothing. A tighter
-         lattice offers more candidate points while `gap` still keeps the
-         circles apart, which evens the rhythm out (largest vertical gap
-         855u instead). `bleed` is likewise set rather than left to scale
-         with the cell, which pushed the lattice off-frame until no circle
-         landed whole inside the page. */
-      /* Keep the band behind the header clear — a circle drifting up there
-         crowds the wordmark and the nav plate. The rect is measured off the
-         header itself (its height differs on a phone) and runs well past
-         both edges so a circle bleeding in from the side is caught too. */
-      var wHdr = document.querySelector('.site-header');
-      var wKeep = [];
-      if (wHdr) {
-        var hb = wHdr.getBoundingClientRect(), hostBox = host.getBoundingClientRect();
-        wKeep.push({ x: -W, y: -H, w: 3 * W, h: H + (hb.bottom - hostBox.top) / u, rot: 0 });
-      }
-      items = scatter(W, H, {
-        keepOut: wKeep,
-        types: ['circle'],
-        seed:   mob ? 23   : 4,
-        scale:  mob ? 0.62 : 1.01,
-        gap:    mob ? 34   : 380,
-        jitter: mob ? 0.18 : 0.3,
-        bleed:  mob ? undefined : 220,
-        cell:   mob ? undefined : 850
-      });
+      /* nothing else draws vectors: the work page dropped its circles, and
+         the project pages never had a layer */
+      return;
     }
 
     layer.innerHTML = items.map(svgFor).join('');
