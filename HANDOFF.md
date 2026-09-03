@@ -368,5 +368,6 @@ every page). Confirm which they want before matching pixel-for-pixel.
 
 ## Also open
 
-- `Read My CV Here` (about) and all nine work tile links point at `#`.
 - Fonts load from Google Fonts.
+- `Read My CV Here` points at the CV on Google Drive. That link only works
+  for visitors if the file's sharing is set to "anyone with the link".
