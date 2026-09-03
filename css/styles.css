@@ -504,9 +504,6 @@ a{ color:inherit; }
 }
 .project-title{ margin:0 0 var(--vstep); }
 
-/* Reset first: this and .project-copy figure have the same specificity, so
-   whichever comes last wins — with the reset below, the copy column's
-   figure lost its top margin and sat flush against the text. */
 .project figure{ margin:0; }
 .project img{
   display:block;
@@ -525,9 +522,16 @@ a{ color:inherit; }
   object-fit: contain;
   object-position: left top;
 }
-/* The hero beside the copy is capped like every other image. It used to
-   be exempt, to hold its frame's column exactly, but that let it run past
-   the bottom of the window — opencall's was 885px tall in an 845px one. */
+/* The hero beside the copy is capped like every other image. It used to be
+   exempt, to hold its frame's column exactly, but that let it run past the
+   bottom of the window — opencall's was 885px tall in an 845px one.
+
+   Where the cap bites, the picture is narrower than its box, and it is
+   pulled to the RIGHT of that box rather than the left: its column ends at
+   the page's own inset, so this lines the hero's right edge up with every
+   full-width image below it. The slack falls between the copy and the
+   hero, where it reads as the gutter. */
+.project-intro--split > figure img{ object-position: right top; }
 
 /* Two intro shapes from the Figma frames: copy beside a portrait hero, or
    copy above a full-width one. --split carries each page's own column
@@ -542,21 +546,12 @@ a{ color:inherit; }
   grid-template-columns: var(--split, 1fr 1.6fr);
   column-gap: calc(40 * var(--u));
   row-gap: var(--vstep);
-  /* stretch, not start: the copy column has to take the row's full height
-     for anything in it to be able to sit on the row's bottom edge */
-  align-items:stretch;
+  align-items:start;
 }
-/* The copy column is a flex column so a figure in it (mfah's square post)
-   can be pushed to the foot and line up with the bottom of the hero
-   beside it, the way the frame has them — 269+1109 and 928+450 both land
-   on 1378. The body copy keeps a --vstep bottom margin so the gap can
-   never close up completely if the column runs out of slack. */
-.project-copy{ display:flex; flex-direction:column; }
 .project-lede{ max-width: calc(1150 * var(--u)); margin: 0 0 var(--vstep); }
 .project-copy .body-copy p{ margin: 0 0 calc(22 * var(--u)); }
 .project-copy .body-copy p:last-child{ margin-bottom:0; }
-.project-copy .body-copy{ margin-bottom: var(--vstep); }
-.project-copy > figure{ margin: auto 0 0; }
+
 
 
 /* three steps, so a new section still reads as a break in the same rhythm */
@@ -713,10 +708,6 @@ a{ color:inherit; }
   .project-copy .body-copy, .project-lede, .project-caption, .figma-link{ font-size: calc(15 * var(--u)); }
   .project-copy .body-copy p{ margin-bottom: calc(14 * var(--u)); }
   .project-intro--split{ grid-template-columns: minmax(0, 1fr); column-gap:0; }
-  /* stacked on a phone, so nothing to bottom-align against */
-  .project-copy{ display:block; }
-  .project-copy .body-copy{ margin-bottom:0; }
-  .project-copy > figure{ margin: var(--vstep) 0 0; }
   .project-section > .section-title{ font-size: calc(22 * var(--u)); }
   /* every row stacks, each image the same width, aspect ratio kept */
   .img-row, .img-row.cols-2, .img-row.cols-3{ --cols:1; }

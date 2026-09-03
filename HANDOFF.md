@@ -235,21 +235,23 @@ Two things had made it uneven:
   reset is hoisted above it now. Watch for this if another figure rule is
   added — put it after the reset, or it silently loses.
 
-## mfah: post aligned with the poster
+## The split heroes sit at the right margin
 
-On the mfah page the square post sits in the copy column and its bottom
-lines up with the bottom of the poster beside it, as the frame has them
-(269+1109 and 928+450 both land on 1378). Two things make that work: the
-split intro is `align-items:stretch` rather than `start`, so the copy
-column takes the row's full height, and the copy column is a flex column
-with `margin-top:auto` on its figure to push it to the foot. The body copy
-keeps a `--vstep` bottom margin so the gap cannot close up entirely if the
-column ever runs short of slack.
+Where the height cap bites, a picture is narrower than its box. Every image
+is pulled to the left of its box except the hero beside the copy on a split
+page, which is pulled to the RIGHT: its column ends at the page's own inset,
+so this lines the hero's right edge up with the full-width images below it —
+200u on both, measured on cla, jsa, mfah and opencall. The slack falls
+between the copy and the hero, where it reads as the gutter.
 
-The copy-to-post gap is therefore whatever bottom alignment needs (185u at
-1440) rather than one `--vstep` — bottom alignment and an even gap cannot
-both hold there. On a phone the columns stack, so the copy column reverts to
-plain flow and the gap is `--vstep` like everywhere else.
+Scaling the hero up to fill its column instead was not an option: these are
+portraits, and at full column width they run taller than the window, which
+is what the height cap exists to prevent.
+
+mfah's square post used to sit in the copy column, bottom-aligned with the
+poster. It has its own **Post Version** section now, so the flex column and
+`align-items:stretch` that made that alignment work are gone — nothing else
+ever put a figure in the copy column.
 
 ## How wide the work pages run
 
