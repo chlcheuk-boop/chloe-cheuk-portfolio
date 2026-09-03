@@ -151,15 +151,37 @@
      where K is where the group's foot would sit with no air above it. n
      only decides how big the triangles come out, so take whichever puts S
      nearest 50u while keeping them legible. */
-  function contactRhythm(W, Ph, K) {
+  /* How much invisible room a line of type carries above and below its
+     letters. A box edge is not where the ink is: the line box adds half
+     leading at both ends, and inside the em the ascent and descent are
+     only partly used — "Chloe Cheuk" has no descender at all, so its box
+     runs 38px below the last letter, while "Instagram" has a g and stops
+     1.7px short. Comparing box edges made the gaps equal on paper and
+     visibly lopsided on screen, roughly 93px above against 45px below. */
+  function inkSlack(el, text) {
+    var cs = getComputedStyle(el);
+    var ctx = (inkSlack.c || (inkSlack.c = document.createElement('canvas').getContext('2d')));
+    ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+    var t = ctx.measureText(text);
+    var fa = t.fontBoundingBoxAscent, fd = t.fontBoundingBoxDescent;
+    if (!(fa > 0)) return { top: 0, bottom: 0 };          /* no metrics: no correction */
+    var L = cs.lineHeight === 'normal' ? fa + fd : parseFloat(cs.lineHeight);
+    var base = (L - (fa + fd)) / 2 + fa;
+    return { top: base - t.actualBoundingBoxAscent,
+             bottom: L - (base + t.actualBoundingBoxDescent) };
+  }
+
+  function contactRhythm(W, Ph, K, delta) {
     var r = TRI_H / TRI_W, g = SHRINK, A = r * (1 - 2 * g / 3), best = null;
     for (var n = 3; n <= 14; n++) {
-      var S = ((n - g) * (Ph - K) - A * W) / (3 * (n - g) - 2 * A);
-      if (!(S > 0)) continue;
-      var w = (W - 2 * S) / (n - g);
+      var D = n - g - A;
+      var S = ((n - g) * (Ph - K) - A * W - 2 * delta * D) / (3 * (n - g) - 2 * A);
+      if (!(S > 4)) continue;
+      var M = S + delta;
+      var w = (W - 2 * M) / (n - g);
       if (w < 150) continue;
-      var d = Math.abs(S - 50);
-      if (!best || d < best.d) best = { S: S, n: n, d: d };
+      var d = Math.abs(S - 40);
+      if (!best || d < best.d) best = { S: S, M: M, n: n, d: d };
     }
     return best;
   }
@@ -429,7 +451,14 @@
           var titleText = (tRect.top - cbox.top) / u
                         + parseFloat(getComputedStyle(cTitle).paddingTop) / u;
           var gapA = titleText - wmB;
-          var sol = contactRhythm(W, H, (lRect.bottom - cbox.top) / u - gapA);
+          /* balance the ink, not the boxes */
+          var lis = cList.querySelectorAll('li');
+          var lastLi = lis[lis.length - 1];
+          var slackA = inkSlack(cWm, cWm.textContent.trim()).bottom
+                     + inkSlack(cTitle, cTitle.textContent.trim()).top;
+          var slackB = lastLi ? inkSlack(lastLi, lastLi.textContent.trim()).bottom : 0;
+          var sol = contactRhythm(W, H, (lRect.bottom - cbox.top) / u - gapA,
+                                  (slackA - slackB) / u);
           if (sol) {
             var root = document.documentElement;
             /* the wordmark hangs below the header box; the heading's own
@@ -439,7 +468,7 @@
             /* read back after the gaps apply, so the band starts where the
                list actually ends rather than where it used to */
             var bandTop = (cList.getBoundingClientRect().bottom - cbox.top) / u;
-            items = triangleBandAt(W, bandTop, sol.n, sol.S);
+            items = triangleBandAt(W, bandTop, sol.n, sol.M);
           }
         }
       }
@@ -534,6 +563,11 @@
   function init() {
     var page = document.body.dataset.page || 'home';
     paintVectors(page);
+    /* the contact rhythm is measured off font metrics, which are the
+       fallback font's until the webfont lands — repaint when it does */
+    if (page === 'contact' && document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { paintVectors(page); });
+    }
     initHoverTags();
     if (page === 'home') runIntro();
 

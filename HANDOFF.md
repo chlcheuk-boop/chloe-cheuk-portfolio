@@ -269,12 +269,26 @@ it exact: measured 833.4 against 833.4 at 1440x845.
 
 The heading and the list are **one group**, keeping the frame's own 26u
 between them, and that group sits centred between the foot of "Chloe Cheuk"
-and the top of the triangles. The air above it, the air below it and the
-band's own left, right and bottom margins are all one number. Measured
-centred at 1440x845 (43), 1512x845 (55), 1920x1080 (72) and 1280x1024 (94).
+and the top of the triangles.
 
-Making the heading-to-list gap that same number as well was the first
-attempt and it read wrong: it spread the group out instead of moving it.
+**Centred by ink, not by boxes.** A box edge is not where the letters are:
+the line box adds half leading at both ends, and inside the em the ascent
+and descent are only partly used. "Chloe Cheuk" has no descender, so its
+box runs 38px past the last letter, and the heading's box starts 12px above
+its capitals — 50px of invisible air above the group. "Instagram" has a g,
+so its box stops 1.7px short. Equal box gaps therefore looked badly
+lopsided, about 93px above against 45px below, which is what the user saw.
+`inkSlack()` measures that slack off canvas font metrics and the solve
+balances the ink instead. Measured equal to the eye at 1440x845 (93/93),
+1512x845 (82/82) and 1920x1080 (107/107); the box gaps behind those are 43
+against 91, 30 against 81, and 41 against 105.
+
+The metrics are the fallback font's until the webfont lands, so contact
+repaints on `document.fonts.ready`. Only contact — repainting home there
+would tear down the intro mid-flight.
+
+Making the heading-to-list gap match the outer ones was an earlier attempt
+and it read wrong: it spread the group out instead of moving it.
 
 **The gap cannot be set independently of the band.** The band's margin falls
 out of its own geometry and depends on the room left under the copy, which
@@ -283,7 +297,10 @@ back would need iterating to a fixed point. `contactRhythm()` solves both at
 once instead: asking for the band's equal margin to equal the gap rearranges
 to
 
-    S = [ (n-g)(Ph - K) - A*W ] / [ 3(n-g) - 2A ],   A = r(1 - 2g/3)
+    S = [ (n-g)(Ph - K) - A*W - 2*delta*D ] / [ 3(n-g) - 2A ]
+
+with `A = r(1 - 2g/3)`, `D = n - g - A`, and `delta` the difference in ink
+slack above and below the group; the band's margin is then `S + delta`.
 
 with n only deciding how big the triangles come out. JS writes S into
 `--cgap`, and `--cwm` carries the wordmark's overhang below the header box,
