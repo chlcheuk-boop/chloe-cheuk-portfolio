@@ -511,6 +511,12 @@ a{ color:inherit; }
      never taller than --imgmax of the window, and object-fit letterboxes
      the picture inside it, left-aligned, at its own aspect ratio.
 
+     95vh, not 80: the landscape boards come to 92-95% of an 845px window
+     at full column width, so a tighter cap was shrinking them off the
+     right margin for no gain — they fit the screen either way. Portraits
+     are still capped and always will be; at column width they run 160-170%
+     of the window. */
+
      The box has to keep width:100%. With width:auto a lazy image that has
      not loaded yet has no definite width to size from, so all of them
      collapsed to 0x0 — no space reserved, and the page had no height. Only
@@ -518,7 +524,7 @@ a{ color:inherit; }
      the same as sizing the box to the picture. */
   width:100%;
   height:auto;
-  max-height: var(--imgmax, 80vh);
+  max-height: var(--imgmax, 95vh);
   object-fit: contain;
   object-position: left top;
 }

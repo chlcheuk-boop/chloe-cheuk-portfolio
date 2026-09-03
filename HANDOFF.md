@@ -235,6 +235,13 @@ Two things had made it uneven:
   reset is hoisted above it now. Watch for this if another figure rule is
   added — put it after the reset, or it silently loses.
 
+## opencall is a stacked page
+
+Its title and copy run full width above the work, like bloodondot, and the
+two posters sit side by side in one `cols-2` row instead of one beside the
+copy and one in a section below. They come out 504x652 each, together
+spanning the content column exactly, 200u to 1240u.
+
 ## The split heroes sit at the right margin
 
 Where the height cap bites, a picture is narrower than its box. Every image
@@ -321,7 +328,14 @@ pattern from `triangleBands()`.
 ## Capping tall images
 
 The brief is that a whole image should be visible without scrolling, so
-`--imgmax` is `80vh` — a share of the window, not of the page. `.project
+`--imgmax` is a share of the window, not of the page.
+
+**95vh, not 80.** At full column width the landscape boards come to 92-95%
+of an 845px window — 780u for the Blood on Dot board, 803u for the pain
+cube and the glitched boards — so a tighter cap was shrinking them off the
+right margin for nothing, since they fit the screen either way. Portraits
+are still capped and always will be: at column width the CLA branding board
+runs 173% of the window and the opencall poster 159%. `.project
 img` is `width:100%; max-height:var(--imgmax)` with `object-fit:contain`
 and `object-position:left top`, so the box takes its column but is never
 taller than the cap, and the picture letterboxes inside it at its own
