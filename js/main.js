@@ -512,7 +512,18 @@
          855u instead). `bleed` is likewise set rather than left to scale
          with the cell, which pushed the lattice off-frame until no circle
          landed whole inside the page. */
+      /* Keep the band behind the header clear — a circle drifting up there
+         crowds the wordmark and the nav plate. The rect is measured off the
+         header itself (its height differs on a phone) and runs well past
+         both edges so a circle bleeding in from the side is caught too. */
+      var wHdr = document.querySelector('.site-header');
+      var wKeep = [];
+      if (wHdr) {
+        var hb = wHdr.getBoundingClientRect(), hostBox = host.getBoundingClientRect();
+        wKeep.push({ x: -W, y: -H, w: 3 * W, h: H + (hb.bottom - hostBox.top) / u, rot: 0 });
+      }
       items = scatter(W, H, {
+        keepOut: wKeep,
         types: ['circle'],
         seed:   mob ? 23   : 4,
         scale:  mob ? 0.62 : 1.01,

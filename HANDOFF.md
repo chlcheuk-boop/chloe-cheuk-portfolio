@@ -201,6 +201,14 @@ scratchpad if a bigger export is ever wanted.
 column ratio from its frame in `--split`. `.project` has 96u of top
 padding so the title lands on the frame's own 269 line.
 
+## Work page: header kept clear
+
+The work page's circles take a `keepOut` rect covering everything above the
+header's bottom edge, measured off the header element itself (its height
+differs on a phone) and running a page width past each side so a circle
+bleeding in from the edge is caught too. Verified: 11 circles at 1440 and
+15 at 375, none reaching into the header band.
+
 ## Project page spacing
 
 Every gap in the title -> copy -> image rhythm comes from one token,
@@ -218,6 +226,31 @@ Two things had made it uneven:
   column had **no top margin at all** and sat flush against the text. The
   reset is hoisted above it now. Watch for this if another figure rule is
   added — put it after the reset, or it silently loses.
+
+## Capping tall images
+
+A portrait image at full column width ran to two or three screens — the
+opencall variant was 1634u tall, and the JSA story graphics reached 1713u
+once a three-up row stacked. `.project img` now caps at `--imgmax`
+(1000u), with `object-fit:contain` and `object-position:left top`, so a
+too-tall image shrinks and sits at the left of its box rather than
+stretching.
+
+The cap is **proportional to the page, not the viewport**, and that is the
+point: the tallest landscape board is 991/1283 of its column, about 975u at
+full width, so it stays under the cap untouched and only genuinely vertical
+images shrink. A `vh` cap would have shaved every board as well. The box
+keeps `width:100%` rather than switching to `width:auto` so that a column
+wider than the image's own 2000px — which happens past about 2280px of
+window — still fills.
+
+The hero beside the copy on a split page is exempt (`max-height:none`); it
+keeps its frame's column and proportions.
+
+Note this trades against the equal-width rule below: a stacked portrait no
+longer fills the same width as a stacked landscape. That is deliberate, and
+only bites on desktop — at phone widths the column is narrow enough that
+nothing reaches the cap, so stacked images there are still equal width.
 
 ## Image rows and stacking
 

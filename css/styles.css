@@ -475,7 +475,22 @@ a{ color:inherit; }
    whichever comes last wins — with the reset below, the copy column's
    figure lost its top margin and sat flush against the text. */
 .project figure{ margin:0; }
-.project img{ display:block; width:100%; height:auto; }
+.project img{
+  display:block;
+  width:100%;
+  height:auto;
+  /* A portrait image at full column width runs to two or three screens, so
+     cap how tall any one of them gets. The cap is proportional to the page
+     rather than the viewport, which is what keeps it off the landscape
+     boards: the tallest of those is 991/1283 of its column, about 975u at
+     1440, so it stays full width and only genuinely vertical images shrink.
+     A shrunk image sits at the left of its box instead of stretching. */
+  max-height: var(--imgmax, calc(1000 * var(--u)));
+  object-fit: contain;
+  object-position: left top;
+}
+/* the hero beside the copy keeps its frame's proportions and its column */
+.project-intro--split > figure img{ max-height:none; }
 
 /* Two intro shapes from the Figma frames: copy beside a portrait hero, or
    copy above a full-width one. --split carries each page's own column
