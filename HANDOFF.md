@@ -327,31 +327,25 @@ bottom margin at 125u against 44u everywhere else.
 Mobile is untouched: it overrides both gaps and keeps its own multi-band
 pattern from `triangleBands()`.
 
-## Sealing the phone screen's edges
+## Starbursts at the phone screen's edges
 
-A starburst that crosses a screen edge on its spike tips alone leaves white
-notches along that edge — the tips cross it, the concave points between them
-do not. `sealEdges()` pushes any such shape straight out until its inner
-radius reaches the edge, so an inner point is always at least touching.
+A starburst crossing an edge on its spike tips alone shows white notches
+along it: the tips cross, the concave points between them do not. The
+phone composition places them past that point by hand instead of enforcing
+it in code — an automatic `sealEdges()` pass existed briefly and was
+dropped at the user's request.
 
-The numbers come from the path, not a guess: sampling the fill radially
-every half degree gives 20 spikes, an outer radius of exactly half the box
-and the concave points at **0.3338** of the box (`STAR_INNER`), so a spike
-reaches twice as far from the centre as the notch beside it.
+Useful numbers if this comes up again, measured off the path rather than
+guessed (sampling the fill radially every half degree): 20 spikes, outer
+radius exactly half the box, concave points at **0.3338** of the box. So a
+spike reaches twice as far from the centre as the notch beside it, and a
+star reads as sealed against an edge when its centre is within 0.3338 x box
+of it.
 
-Only starbursts need it — a circle or triangle has no notches — and the push
-is always outward, away from the middle where the plates are, so it cannot
-undo the clearance `space()` just established. Phone only; desktop keeps the
-Figma composition untouched.
-
-Verified at 320x568 through 1024x768, nine sizes: no star crosses an edge on
-tips alone, and sampling the plate outlines and interiors against each
-shape's drawn fill finds no overlap. Note a bounding-circle check reports
-false overlaps here — the spike-tip radius against a rotated plate's box
-said -74 where the drawn shapes are comfortably clear.
-
-The about page's starburst already satisfies the rule on its own (46 against
-an inner radius of 83) and is untouched.
+Where the current positions stand: clean at 375x812 and up, but at 320x568
+and 375x667 the top-left star meets the left edge on tips alone, by about
+9-10px. Nudging its `cx` in `HOME_MOBILE` down a little would cover those
+too.
 
 ## Capping tall images
 

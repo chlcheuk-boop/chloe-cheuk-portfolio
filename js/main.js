@@ -322,35 +322,6 @@
     return repel(items, rects, minClear);
   }
 
-  /* The starburst's own geometry, measured off its path rather than
-     guessed: sampling the fill radially every half degree gives 20 spikes,
-     an outer radius of exactly half the box, and concave points between
-     the spikes at 0.3338 of the box. A spike therefore reaches twice as
-     far from the centre as the notch beside it. */
-  var STAR_INNER = 0.3338;
-
-  /* Seal the screen edges. A starburst whose spikes cross an edge but whose
-     centre sits further in than its inner radius shows white notches along
-     that edge — the tips cross it, the concave points between them do not.
-     Push any such shape straight out until the inner radius reaches the
-     edge, so the edge line is solid wherever the shape meets it.
-
-     Only starbursts need this; a circle or a triangle has no notches to
-     leave a gap. And the push is always outward, away from the middle where
-     the plates are, so it cannot undo the clearance space() just set up. */
-  function sealEdges(items, W, H) {
-    return items.map(function (it) {
-      if (it.s !== 'star') return it;
-      var R = it.size / 2, ri = it.size * STAR_INNER;
-      var cx = it.cx, cy = it.cy;
-      if (cx < R && cx > ri) cx = ri;
-      if (W - cx < R && W - cx > ri) cx = W - ri;
-      if (cy < R && cy > ri) cy = ri;
-      if (H - cy < R && H - cy > ri) cy = H - ri;
-      return { s: it.s, cx: cx, cy: cy, size: it.size, rot: it.rot };
-    });
-  }
-
   /* Find the most open point in the layer — the spot furthest from every
      already-placed shape and from the plates. Used to drop the triangle
      into whatever white space the rest of the composition leaves. */
@@ -415,7 +386,7 @@
           rest.push({ s: 'triangle', cx: spot.x, cy: spot.y, size: triSrc.size, rot: triSrc.rot });
           rest = space(rest, rects, 30, 16);
         }
-        items = sealEdges(rest, W, H);
+        items = rest;
 
       } else {
         /* the exact Figma composition, with the plates given extra room.
