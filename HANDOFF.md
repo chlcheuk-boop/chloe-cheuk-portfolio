@@ -455,6 +455,19 @@ show:
 **four** (`home` was added when the user asked that every page link to
 every page). Confirm which they want before matching pixel-for-pixel.
 
+## The four late boards
+
+`sebio-womens-05` (Usage/Ux) and `bloodondot-04/05/06` (Process, Accessibility,
+Impact) arrived last, in `~/Downloads/Untitled (4).zip` as IMG_6447/6449/6451/6452
+— names that say nothing, so each was identified by the heading printed on it.
+They are in none of the .fig files or the portfolio PDF; the zip is their only
+source. Converted like the rest: 2000px max, JPEG q82, 282-409KB each.
+
+Final orders:
+
+    bloodondot    process, branding, code/UI-UX, accessibility, impact
+    sebio-womens  process for logo, branding, zooming in, usage/UX
+
 ## Status chips
 
 `.project-status` is a small chip under the title — "Work in progress" on
