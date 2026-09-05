@@ -499,6 +499,20 @@ d", "Swif t"), so it needs reading rather than pasting.
 **The line is Instrument Sans** (`var(--sans)`), the site's own sans, which
 keeps it distinct from the serif titles.
 
+## Image paths need ../
+
+Every page except home lives in a directory, so an image is
+`../images/work/x.jpg` — never `images/work/x.jpg`, which resolves to
+`/work-<slug>/images/...` and 404s. The four late boards were added without
+it and rendered as nothing.
+
+**Do not verify these by grepping the filename and curling it from the
+root** — that strips the `../` and passes whatever the page actually says.
+Resolve each src against its own page's directory (`urljoin`), which is what
+the check in the repo history does, or read `naturalWidth` in the browser: a
+box that has its width/height attributes still lays out at the right size
+with a broken source, so measuring the box proves nothing.
+
 ## URLs carry no .html
 
 Every page except the home one lives in a directory of its own —
