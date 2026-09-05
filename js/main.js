@@ -86,7 +86,7 @@
   /* The phone home screen, laid out from the mockup: six large shapes,
      each running off one edge, around the two tilted plates. */
   var HOME_MOBILE = [
-    { s: 'star',     cx:  53, cy:   8, size: 218 },
+    { s: 'star',     cx:  41, cy:   8, size: 218 },
     { s: 'circle',   cx: 375, cy:   5, size: 190 },
     { s: 'star',     cx: 382, cy: 388, size: 205 },
     { s: 'triangle', cx: -10, cy: 575, size: 186 },

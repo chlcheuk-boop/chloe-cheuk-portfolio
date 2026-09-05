@@ -455,6 +455,14 @@ show:
 **four** (`home` was added when the user asked that every page link to
 every page). Confirm which they want before matching pixel-for-pixel.
 
+## Status chips
+
+`.project-status` is a small chip under the title — "Work in progress" on
+Blood on Dot, "Currently being tested" on Sebio Women's Health. It carries
+`var(--radius)`, the same 17u corner the work tiles use, on the plate
+colour, and sits in the `--vstep` rhythm like everything else so the even
+spacing holds.
+
 ## The software line
 
 Each project page carries a `.project-software` line under its title,
