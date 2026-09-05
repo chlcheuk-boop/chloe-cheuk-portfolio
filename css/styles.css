@@ -269,6 +269,7 @@ a{ color:inherit; }
 .h-sebiowomens { aspect-ratio: 1372 / 771;  }
 .h-sebiocube   { aspect-ratio: 1372 / 1060; }
 .h-glitched    { aspect-ratio: 1372 / 857;  }
+.h-supplychain { aspect-ratio: 1372 / 784;  }
 
 /* feature 6 — cursor-following caption. The outer node carries the
    (untransitioned) translate so it tracks the cursor exactly; the inner
@@ -600,6 +601,10 @@ a{ color:inherit; }
 .img-row.cols-2{ --cols:2; }
 .img-row.cols-3{ --cols:3; }
 .img-row + .img-row{ margin-top: var(--vstep); }
+/* Copy that comes back after a row of images. The row carries no bottom
+   margin, so without this the only gap is the paragraph's own collapsed
+   top margin — 24 against the 32 everything else in the page sits on. */
+.img-row + .project-lede{ margin-top: var(--vstep); }
 
 .figma-link{
   margin: var(--vstep) 0 0;
@@ -693,7 +698,8 @@ a{ color:inherit; }
   }
   .work-row-split .tall, .work-row-split .sq,
   .work-row-pair .tile, .work-row-pair > *,
-  .h-bloodondot,.h-sebiowomens,.h-sebiocube,.h-glitched{ height:auto; aspect-ratio:auto; }
+  .h-bloodondot,.h-sebiowomens,.h-sebiocube,.h-glitched,
+  .h-supplychain{ height:auto; aspect-ratio:auto; }
   .tile img{ height:auto; }
   .hover-tag{ display:none; }              /* no pointer on touch devices */
 

@@ -176,9 +176,10 @@ thing to change, not the placement maths.
 
 ## Project pages
 
-Nine pages, `work-<slug>.html`, one per work tile, built from `Desktop - 6`
-and `8..15` of `~/Downloads/Untitled (4).fig`. Every tile on the work page
-now links to its own page instead of `#`.
+Ten pages, `work-<slug>/`, one per work tile. Nine were built from
+`Desktop - 6` and `8..15` of `~/Downloads/Untitled (4).fig`; the tenth,
+`work-supply-chain`, came from a PDF instead — see its own section below.
+Every tile on the work page links to its own page instead of `#`.
 
 **Getting them out of the .fig.** Same trick as the first file — it is a
 ZIP whose `canvas.fig` is kiwi binary (schema chunk raw deflate, data chunk
@@ -560,6 +561,40 @@ at wherever the site actually lives:
 
 LinkedIn caches a preview per URL for around a week; its Post Inspector
 (linkedin.com/post-inspector) forces a re-scrape after a change.
+
+## The supply chain page came from a PDF, not the .fig
+
+`work-supply-chain/` is the tenth project page and the only one not built
+from a Figma frame. Its source is `~/Downloads/Cookie Supply Chain Process
+and Result (1).pdf`, which is **one page, 2988 x 30619pt** — an exported
+long-scroll document, not 114 pages as a page-count estimate may claim.
+`pdftoppm` is not installed on this machine, so the Read tool cannot render
+it; the scratchpad Swift tools do the work instead:
+
+- `pdfrender.swift` — whole pages to PNG
+- `pdfcrop.swift` — one rect (top-origin y, in points) to PNG at any scale
+- `blocks.swift` / `grid.swift` — find content blocks by scanning rows and
+  then columns for pixels that differ from the page ground, which is a flat
+  `#d9d9d9`. This is how every crop below was located rather than guessed.
+- `export.swift` — a rect straight to JPEG at 2000px max, q82, with an
+  optional `white` flag
+
+The ten UI snapshots are perfectly regular: x 328, w 2294, h 1311, at
+y 15430 then 16934 + n*1500. The four lo-fi wireframes are in two columns
+at x 222 and x 1488.
+
+**The `white` flag.** The logo lockup (`supplychain-10`) is black line art
+sitting on the page's grey ground, so a straight crop is a grey block on a
+white page. The flag rescales luminance so 217 maps to 255 and 0 stays 0 —
+grey becomes white and the antialiasing survives. It only works because
+that artwork is greyscale; do not use it on anything with colour in it.
+
+**Copy after a row of images.** `.img-row` carries no bottom margin, so a
+`.project-lede` following one had only the paragraph's own collapsed 24px
+top margin against the 32 everything else sits on. `.img-row +
+.project-lede` restores the step. This page is the only one that puts copy
+back after images; every other page's copy comes before them, or uses
+`.project-caption`, which already has the margin.
 
 ## Also open
 
