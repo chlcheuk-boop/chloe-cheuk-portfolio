@@ -583,11 +583,35 @@ The ten UI snapshots are perfectly regular: x 328, w 2294, h 1311, at
 y 15430 then 16934 + n*1500. The four lo-fi wireframes are in two columns
 at x 222 and x 1488.
 
+**Resolution.** The snapshots are embedded in the PDF as 3024 x 1724
+rasters placed into 2294 x 1311pt boxes, so their native scale is 1.318
+px/pt; they are exported at 3024 wide, 1:1, with no resampling at all. The
+wireframes and the colour board are vector in the PDF and go out at 2400.
+The two competitor shots and the Crumbl reference are raster at 1600, 2048
+and 800 — exported at exactly those widths and never above them, since
+upsampling a raster only costs bytes. This is the one place on the site
+that breaks the 2000px convention, and deliberately.
+
+To find a native size, scan the PDF bytes for `/Subtype /Image` and read
+the `/Width` and `/Height` out of the enclosing dictionary; match a region
+to its raster by aspect ratio.
+
 **The `white` flag.** The logo lockup (`supplychain-10`) is black line art
 sitting on the page's grey ground, so a straight crop is a grey block on a
 white page. The flag rescales luminance so 217 maps to 255 and 0 stays 0 —
 grey becomes white and the antialiasing survives. It only works because
 that artwork is greyscale; do not use it on anything with colour in it.
+
+**The copy is Chloe's, verbatim.** Every paragraph on this page is her own
+wording from the PDF, down to the arrow notation and the numbered steps —
+an earlier draft paraphrased it and she asked for her text back. If this
+page is ever edited, paraphrasing is the thing not to do.
+
+Her copy is written one idea per line, each led by an arrow or a bullet,
+which `<br>` reproduces. A line too long for the column used to wrap flush
+to the margin and read as a new point, so each is wrapped in
+`<span class="ln">` — an inline block with a negative text-indent, which
+hangs the marker. `.ln--sub` adds the second level's indent.
 
 **Copy after a row of images.** `.img-row` carries no bottom margin, so a
 `.project-lede` following one had only the paragraph's own collapsed 24px

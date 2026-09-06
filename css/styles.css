@@ -580,6 +580,19 @@ a{ color:inherit; }
   align-items:start;
 }
 .project-lede{ max-width: calc(1150 * var(--u)); margin: 0 0 var(--vstep); }
+/* A lede can run to several paragraphs. The browser's own 1em gap (24u)
+   comes out tighter than the 30.7u line height inside a paragraph, which
+   reads as though the paragraphs were one block; 30u gives a clean blank
+   line. Zero on the last one so the parent's own --vstep is the only gap
+   below, and zero on top so it never fights --vstep above. */
+.project-lede > p{ margin: 0 0 calc(30 * var(--u)); }
+.project-lede > p:last-child{ margin-bottom:0; }
+/* The copy on the supply chain page is written as one idea per line, each
+   led by an arrow or a bullet. An inline block lets the marker hang, so a
+   line too long for the column wraps under its own text rather than
+   resetting to the margin and reading as a new point. */
+.project-lede .ln{ display:inline-block; padding-left:1.15em; text-indent:-1.15em; }
+.project-lede .ln--sub{ margin-left:1.6em; }
 .project-copy .body-copy p{ margin: 0 0 calc(22 * var(--u)); }
 .project-copy .body-copy p:last-child{ margin-bottom:0; }
 

@@ -41,58 +41,108 @@
     <section class="project-intro project-intro--stack">
       <h2 class="section-title project-title">Schumbl Schmookies: Cookie Supply Chain Console — UI/UX, Branding, Prototyping</h2>
 <p class="project-software">Software used: Figma, Figma Make, Tailwind CSS</p>
-      <div class="body-copy project-lede">
-        <p>Schumbl Schmookies is a nationwide cookie chain, and this is the supply chain console I designed for Jimmy, its supply chain manager. It follows ingredient quantities across vendors, bakery locations and recipes so that every bakery has what it needs, and it flags the batches that are expiring or short on supply before either one turns into a loss.</p>
-      </div>
       <figure>
-        <img src="../images/work/supplychain-01.jpg" alt="The console dashboard: total shipments, vendors at risk, expiring and insufficient stock, above leaderboards by vendor, store and ingredient." loading="lazy" decoding="async" width="2000" height="1143">
+        <img src="../images/work/supplychain-01.jpg" alt="The console dashboard: total shipments, vendors at risk, expiring and insufficient stock, above leaderboards by vendor, store and ingredient." loading="lazy" decoding="async" width="3024" height="1728">
       </figure>
     </section>
-    <p class="figma-link body-copy">Live Prototype Link: <a href="https://plow-number-95700341.figma.site/" target="_blank" rel="noopener">https://plow-number-95700341.figma.site/</a></p>
+    <p class="figma-link body-copy">Figma Link: <a href="https://plow-number-95700341.figma.site" target="_blank" rel="noopener">https://plow-number-95700341.figma.site</a></p>
     <section class="project-section">
       <h3 class="section-title">Process</h3>
       <div class="body-copy project-lede">
-        <p>I started from the brief: who the design is for, what it is being used for, and where. Breaking the manager&rsquo;s needs down turned up a pattern — every one of them wanted the same three sets of data (vendors, locations, ingredients) but in a different format. That pointed to a table on desktop, with views you can switch between: one body of data seen from whichever angle the day calls for, on the largest frame available so the most of it is visible at once. I defined what each view had to carry, then drew the four screens as lo-fi wireframes.</p>
+        <p><strong>1. Identify Main Points of Design Brief</strong></p>
+        <p><strong>Who is this design for</strong><br>
+        Jimmy, supply chain manager of Schumbl Schmookies</p>
+        <p><strong>What is this design being used for</strong><br>
+        Manage ingredient quantities, minimize loss from expiration or insufficient stock, each bakery has what it needs</p>
+        <p><strong>Where is this design being utilized</strong><br>
+        Nationwide cookie chain: ingredients, suppliers, recipes, bakery locations, vendors</p>
+        <p><strong>2. Breaking Down User Needs</strong></p>
+        <p>Need: manage ingredient quantities + each bakery has what it needs<br>
+        <span class="ln">&rarr; ingredient quantities come from vendors which could possibly provide multiple ingredients each</span><br>
+        <span class="ln">&rarr; ingredients are needed at specific amounts at bakery locations</span><br>
+        <span class="ln">&rarr; ingredients are used in specific recipes in permanent and limited edition cookie flavors</span></p>
+        <p>Need: minimize loss from expiration<br>
+        <span class="ln">&rarr; each vendor could have delays or specific ingredients could have an issue with them</span><br>
+        <span class="ln">&rarr; each location could have expiring/insufficient items</span><br>
+        <span class="ln">&rarr; certain ingredients might have more insufficient/expiring risks than other ingredients</span></p>
+        <p><strong>Pattern: all the user needs require the same data (vendors, locations, ingredients) but in different formats</strong></p>
+        <p><strong>3. Turn the User Needs Pattern Into a User Flow</strong></p>
+        <p><strong>Pattern: all the user needs require the same data but in different formats</strong></p>
+        <p>Format That Suits This: Table on Desktop<br>
+        <span class="ln">&bull; cleanly displays data</span><br>
+        <span class="ln">&bull; can have multiple views for data while maintaining continuity</span><br>
+        <span class="ln">&bull; can switch between views to get different perspectives on data depending on need (ex. if a certain crop recently got a disease you can look at the ingredient page to prioritize that)</span><br>
+        <span class="ln">&bull; houses lots of data for important decisions &rarr; best used on a desktop that has the largest viewing frame and can therefore see the most data at a time</span></p>
+        <p><strong>4. Define Data Being Used</strong></p>
+        <p>Need: manage ingredient quantities + each bakery has what it needs<br>
+        <span class="ln">&rarr; ingredient quantities come from vendors which could possibly provide multiple ingredients each</span><br>
+        <span class="ln ln--sub">&bull; <strong>vendor general information (MOQs, price/unit, bulk discounts, location), locations each vendor serves</strong></span><br>
+        <span class="ln">&rarr; ingredients are needed at specific amounts at bakery locations</span><br>
+        <span class="ln ln--sub">&bull; <strong>at each location: estimated ingredient need, current ingredient stock</strong></span><br>
+        <span class="ln">&rarr; ingredients are used in specific recipes in permanent and limited edition cookie flavors</span><br>
+        <span class="ln ln--sub">&bull; <strong>cookie types (limited edition or not), limited edition duration, limited edition estimated # sold</strong></span></p>
+        <p>Need: minimize loss from expiration<br>
+        <span class="ln">&rarr; each vendor could have delays or specific ingredients could have an issue with them</span><br>
+        <span class="ln ln--sub">&bull; <strong>vendor ingredient stocking + risks per ingredient</strong></span><br>
+        <span class="ln">&rarr; each location could have expiring/insufficient items</span><br>
+        <span class="ln ln--sub">&bull; <strong>ingredient list stocking + info on risks per ingredient at each location</strong></span><br>
+        <span class="ln">&rarr; certain ingredients might have more insufficient/expiring risks than other ingredients</span><br>
+        <span class="ln ln--sub">&bull; <strong># of risks per ingredient + info on risks</strong></span></p>
+        <p><strong>5. Create Lo-Fi Wireframes</strong></p>
       </div>
       <div class="img-row cols-2">
         <figure>
-          <img src="../images/work/supplychain-02.jpg" alt="Lo-fi wireframe of the dashboard: three leaderboard columns by vendor, store and ingredient." loading="lazy" decoding="async" width="2000" height="1336">
+          <img src="../images/work/supplychain-02.jpg" alt="Lo-fi wireframe of the dashboard: three leaderboard columns by vendor, store and ingredient." loading="lazy" decoding="async" width="2400" height="1603">
         </figure>
         <figure>
-          <img src="../images/work/supplychain-03.jpg" alt="Lo-fi wireframe of the ingredients table: cookie types, totals needed and on hand, and risk counts." loading="lazy" decoding="async" width="2000" height="1374">
+          <img src="../images/work/supplychain-03.jpg" alt="Lo-fi wireframe of the ingredients table: cookie types, totals needed and on hand, and risk counts." loading="lazy" decoding="async" width="2400" height="1649">
         </figure>
       </div>
       <div class="img-row cols-2">
         <figure>
-          <img src="../images/work/supplychain-04.jpg" alt="Lo-fi wireframe of the locations view: each bakery&apos;s ingredients, stock, estimated need and vendor." loading="lazy" decoding="async" width="1559" height="2000">
+          <img src="../images/work/supplychain-04.jpg" alt="Lo-fi wireframe of the locations view: each bakery&apos;s ingredients, stock, estimated need and vendor." loading="lazy" decoding="async" width="1870" height="2400">
         </figure>
         <figure>
-          <img src="../images/work/supplychain-05.jpg" alt="Lo-fi wireframe of the vendors view: each vendor&apos;s terms and the stores they serve, ingredient by ingredient." loading="lazy" decoding="async" width="969" height="2000">
+          <img src="../images/work/supplychain-05.jpg" alt="Lo-fi wireframe of the vendors view: each vendor&apos;s terms and the stores they serve, ingredient by ingredient." loading="lazy" decoding="async" width="1162" height="2400">
         </figure>
+      </div>
+      <div class="body-copy project-lede">
+        <p><strong>6. Revise and Prototype in Figma Make (Summarized Changes in Make Chat)</strong></p>
+        <p><strong>Create lo-fi wireframe prototype &rarr; Draft 2</strong> Applied the warm espresso color palette across the entire app: #3c1905 (ink), #f3faf8 (background), #b8466a (expiring risk), #7a3310 (understock risk). Replaced all previous colors in all 7 source files.</p>
+        <p><strong>Draft 2 &rarr; Draft 3</strong> Full UI redesign to match a modern card-based supply chain app reference. Moved from bordered table layout to white cards with subtle shadows, KPI stat strip on the dashboard, pill badges for risk status, and leaderboard columns with ranked entry rows.</p>
+        <p><strong>Draft 3 &rarr; Draft 4</strong> Comprehensive accessibility and platform compliance pass: semantic HTML (&lt;header&gt;, &lt;main&gt;, &lt;article&gt;, &lt;dl&gt;), aria-* attributes throughout, rem font sizes for OS text-size scaling, 36px/44px touch targets, mobile fixed bottom tab bar with safe-area insets, visually-hidden labels, keyboard navigation support.</p>
+        <p><strong>Draft 4 &rarr; Draft 5</strong> Added the full inventory transfer feature: TransferPanel split-view sidebar opens when clicking any expiring badge, showing destination store alternatives with checkboxes, store/vendor detail drill-downs, and an &ldquo;Add to transfer queue&rdquo; action. Added the Transfers overview page as a 5th tab with a pending-count badge.</p>
+        <p><strong>Draft 5 &rarr; Draft 6</strong> Replaced the simple filter-style search with a live global search dropdown. Results are grouped by Vendors / Ingredients / Locations, each row showing a risk dot, bold name, sublabel with counts, a risk badge, and a right arrow. Clicking navigates to that tab with the item pre-selected.</p>
+        <p><strong>Draft 6 &rarr; Draft 7</strong> Design system refresh to match new reference images: Dashboard KPI tiles redesigned into a 2&times;2 grid with a dark espresso hero tile, icon circles, large display numbers, and diagonal arrows. Card border radius increased to 20px everywhere. Tab bar became a pill-group segment control. Shadows made more diffuse.</p>
+        <p><strong>Draft 7 &rarr; Final Draft</strong> Polish and content fixes: &ldquo;Understock&rdquo; renamed to &ldquo;Insufficient Stock&rdquo; throughout. Total Shipments moved to top-left hero KPI tile. Vendor names in ingredient drawers made clickable links to the Vendors page. Transfer queue label changed from &ldquo;Initiate&rdquo; to &ldquo;Add to transfer queue&rdquo; with the ability to uncheck and remove queued transfers. React key prop warning fixed in the Ingredients table.</p>
       </div>
     </section>
     <section class="project-section">
-      <h3 class="section-title">Visual Design</h3>
+      <h3 class="section-title">Main Changes Explained</h3>
       <div class="body-copy project-lede">
-        <p>Competitor research pointed at clean UI, sans serif typography and white backgrounds carrying bold colour.</p>
+        <p><strong>Visual Design</strong></p>
+        <p>Competitor Research:<br>
+        <span class="ln">&rarr; Takeaways: clean UI, sans serif typography, tech-app adjacent UI, white background w/ bold colors</span></p>
       </div>
       <div class="img-row cols-2">
         <figure>
-          <img src="../images/work/supplychain-06.jpg" alt="Competitor research: an inventory app landing page shown across three phone screens." loading="lazy" decoding="async" width="2000" height="1543">
+          <img src="../images/work/supplychain-06.jpg" alt="Competitor research: an inventory app landing page shown across three phone screens." loading="lazy" decoding="async" width="1600" height="1234">
         </figure>
         <figure>
-          <img src="../images/work/supplychain-07.jpg" alt="Competitor research: a shipping company website with a red and white palette and large statistics." loading="lazy" decoding="async" width="2000" height="1499">
+          <img src="../images/work/supplychain-07.jpg" alt="Competitor research: a shipping company website with a red and white palette and large statistics." loading="lazy" decoding="async" width="2048" height="1535">
         </figure>
       </div>
       <div class="body-copy project-lede">
-        <p>I kept the clean layout and the sans serif — Fustat — but drew the palette from cookie companies instead: a warm espresso system with cranberry for expiring stock and burnt sienna for insufficient stock, and cookie illustrations standing in for icons. The logo abbreviates &ldquo;Schumbl Schmookies supply chain manager&rdquo; to 3S+P+C, with the cookie itself as the C.</p>
+        <p>Personalized Take on Competitor Research:<br>
+        <span class="ln">&rarr; Utilize: clean UI, sans serif typography</span><br>
+        <span class="ln">&rarr; Change: use colors inspired by cookie companies, use illustrations of cookies as icons, logo abbreviating Schumbl Schmookies supply chain manager to 3S+P+C and using the cookie icon as the C (made in Figma)</span></p>
       </div>
       <div class="img-row cols-2">
         <figure>
-          <img src="../images/work/supplychain-08.jpg" alt="The colour system: espresso and mint cream primaries, warm neutrals, cranberry and burnt sienna risk colours, and the card surfaces." loading="lazy" decoding="async" width="2000" height="1115">
+          <img src="../images/work/supplychain-08.jpg" alt="The colour system: espresso and mint cream primaries, warm neutrals, cranberry and burnt sienna risk colours, and the card surfaces." loading="lazy" decoding="async" width="2400" height="1338">
         </figure>
         <figure>
-          <img src="../images/work/supplychain-09.jpg" alt="Colour reference from a cookie company: a pink, white and black palette with its hex codes." loading="lazy" decoding="async" width="2000" height="1000">
+          <img src="../images/work/supplychain-09.jpg" alt="Colour reference from a cookie company: a pink, white and black palette with its hex codes." loading="lazy" decoding="async" width="800" height="400">
         </figure>
       </div>
       <div class="img-row cols-1">
@@ -100,61 +150,63 @@
           <img src="../images/work/supplychain-10.jpg" alt="The logo lockup: the 3S+P+C monogram with the cookie as the C, beside &ldquo;Schumbl Schmookies supply chain manager&rdquo;." loading="lazy" decoding="async" width="2000" height="248">
         </figure>
       </div>
+      <div class="body-copy project-lede">
+        <p><strong>User Flow/Features</strong></p>
+        <p>&rarr; While testing out the initial prototype, I realized that there was no way to take direct action if there is an insufficient stock/expiration risk issue &rarr; add a transfer feature that gives you the option to either give the expiring inventory to the closest available stores with insufficient stock or to contact the best available vendor &rarr; then whenever you agree to transfer/add vendor transaction it adds it to a queue that serves as a task list of transfers/vendor contacting needed to do</p>
+        <p>&rarr; I also realized that searching would be tedious if you just scroll to find information due to the quantity of information &rarr; added a search function where you can click and go to the section/page with the information necessary</p>
+      </div>
     </section>
     <section class="project-section">
-      <h3 class="section-title">User Flow &amp; Features</h3>
+      <h3 class="section-title">Finalize a Working Prototype in Figma Make</h3>
       <div class="body-copy project-lede">
-        <p>Testing the first prototype turned up two gaps. There was no way to act on a risk once you had found it, so I added a transfer feature: an expiring badge opens a panel offering the nearest stores that are short on that ingredient, or the best vendor to contact, and anything you agree to joins a queue that reads as a task list. Searching was the other one — at this volume of data, scrolling to find a single vendor or ingredient was tedious — so I added a global search that takes you straight to the page and the record you were after.</p>
+        <p>Utilizing my visual design system, newly described features, design inspiration, and Figma Make I created a working prototype of my idea which can be viewed here: <a href="https://plow-number-95700341.figma.site" target="_blank" rel="noopener">https://plow-number-95700341.figma.site</a></p>
       </div>
     </section>
     <section class="project-section">
-      <h3 class="section-title">Final Prototype</h3>
-      <div class="body-copy project-lede">
-        <p>Built in Figma Make across seven drafts: the colour system, a card-based redesign, an accessibility and platform compliance pass, the transfer feature, global search, and a last design system refresh.</p>
-      </div>
+      <h3 class="section-title">Snapshots of The Site UI</h3>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-11.jpg" alt="The vendors page: each vendor&apos;s MOQ, bulk discount, location and price per unit, over its ingredients store by store." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-11.jpg" alt="The vendors page: each vendor&apos;s MOQ, bulk discount, location and price per unit, over its ingredients store by store." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-12.jpg" alt="The ingredients page: every ingredient with the cookies it goes into, totals needed and on hand, and its risks." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-12.jpg" alt="The ingredients page: every ingredient with the cookies it goes into, totals needed and on hand, and its risks." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-13.jpg" alt="An expiring badge expanded in place, naming the vendor, the store, the days left and the amount at risk." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-13.jpg" alt="An expiring badge expanded in place, naming the vendor, the store, the days left and the amount at risk." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-14.jpg" alt="The transfer panel open beside the table, listing destination stores and the supplier for the expiring batch." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-14.jpg" alt="The transfer panel open beside the table, listing destination stores and the supplier for the expiring batch." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-15.jpg" alt="A destination store checked in the transfer panel, with the add to transfer queue action enabled." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-15.jpg" alt="A destination store checked in the transfer panel, with the add to transfer queue action enabled." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-16.jpg" alt="The locations page: each bakery&apos;s ingredients with stock, estimated need, risk and vendor." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-16.jpg" alt="The locations page: each bakery&apos;s ingredients with stock, estimated need, risk and vendor." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-17.jpg" alt="The transfers page: the pending queue with one flour transfer from Portland to Denver." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-17.jpg" alt="The transfers page: the pending queue with one flour transfer from Portland to Denver." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-18.jpg" alt="Global search on an ingredient, the dropdown grouping results and showing each one&apos;s risk." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-18.jpg" alt="Global search on an ingredient, the dropdown grouping results and showing each one&apos;s risk." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
       <div class="img-row cols-1">
         <figure>
-          <img src="../images/work/supplychain-19.jpg" alt="Global search on a vendor, the dropdown showing its location and its insufficient stock badge." loading="lazy" decoding="async" width="2000" height="1143">
+          <img src="../images/work/supplychain-19.jpg" alt="Global search on a vendor, the dropdown showing its location and its insufficient stock badge." loading="lazy" decoding="async" width="3024" height="1728">
         </figure>
       </div>
     </section>
