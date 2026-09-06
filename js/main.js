@@ -560,6 +560,48 @@
   }
 
   /* ---------- boot ---------- */
+  /* ---------- the top-to-bottom fade (every page but home) ---------- */
+
+  /* The same flat set the stylesheet animates. Flat matters: nesting one
+     faded block inside another multiplies their opacities. */
+  var FADE_SEL = '.page > .vectors, .about-grid > *, .contact-block > *, ' +
+                 '.work-wrap > .tile, .work-row-split > *, .work-row-pair > *, ' +
+                 '.project-intro > *, .project > .figma-link, ' +
+                 '.project-section > *, .project > .project-back';
+  /* how long the sweep takes to travel one screen */
+  var FADE_SPREAD = 380;
+
+  function fadeSweep(page) {
+    if (page === 'home') return;
+    if (window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var els = document.querySelectorAll(FADE_SEL);
+    if (!els.length) return;
+    var vh = window.innerHeight || 1;
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+    var tops = [], i, top;
+    for (i = 0; i < els.length; i++) {
+      tops.push(els[i].getBoundingClientRect().top + y);
+    }
+    /* Measured from the topmost block, not from the top of the document:
+       otherwise the header's height becomes dead time and nothing moves
+       for the first tenth of a second. The sweep travels exactly one
+       screen in FADE_SPREAD. */
+    var first = Math.min.apply(null, tops);
+    var span = Math.max(vh - first, 1);
+
+    for (i = 0; i < els.length; i++) {
+      /* Delay comes from where the block sits, not from its place in the
+         DOM, so the sweep is a single pass down the page whatever the
+         markup nests. Everything past the first screen shares the last
+         delay — nobody is watching it arrive. */
+      var k = Math.min(Math.max((tops[i] - first) / span, 0), 1);
+      els[i].style.animationDelay = Math.round(k * FADE_SPREAD) + 'ms';
+    }
+  }
+
   function init() {
     var page = document.body.dataset.page || 'home';
     paintVectors(page);
@@ -570,6 +612,10 @@
     }
     initHoverTags();
     if (page === 'home') runIntro();
+    /* after paintVectors, because the contact rhythm it sets moves the
+       blocks this measures. Once only: re-running it after the fade has
+       finished would restart the animation and fade the page in twice. */
+    fadeSweep(page);
 
     function markReady() {
       var home = document.querySelector('.home');

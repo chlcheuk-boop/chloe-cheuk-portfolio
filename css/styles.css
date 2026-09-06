@@ -662,28 +662,56 @@ a{ color:inherit; }
    PAGE FADE-IN  (every page but home)
    ============================================================ */
 /* Home is left alone: it has its own intro, where the vectors fly in and
-   the plates rise. Everywhere else the content simply fades up.
+   the plates rise. Everywhere else the content fades in as a sweep down
+   the page — the delay is set from each block's own position by
+   js/main.js, so it reads as one pass from the top rather than a list
+   arriving in DOM order.
 
-   One animation, one duration, no delay between them, so every element
-   arrives at the same moment rather than cascading. The header is
-   excluded and holds still — the name and nav are already in place when
-   the page under them appears.
+   The header is excluded and holds still: the name and nav are already in
+   place when the page under them appears.
 
-   Opacity only, deliberately. A translate would start the content 8px
-   off its resting place, which on about and contact — where the layout is
-   solved to fill the window exactly — is 8px of overflow and a scrollbar
-   that flashes for half a second. `both` puts the from-state in before
-   the first paint, so there is nothing to flash. */
+   The selector is deliberately FLAT — no element in it is an ancestor of
+   another. Fading a block inside a block multiplies the two opacities,
+   which muddies the timing, so containers are skipped and their children
+   listed instead.
+
+   Opacity only, deliberately. A translate would start the content off its
+   resting place, and on about and contact — where the layout is solved to
+   fill the window exactly — a downward one is that many pixels of
+   overflow and a scrollbar that flashes for half a second.
+
+   The delay defaults to 0, so if the script never runs the blocks simply
+   fade in together. `both` puts the from-state in before the first paint,
+   so there is nothing to flash either way. */
 @keyframes page-in{ from{ opacity:0 } to{ opacity:1 } }
 
-body:not([data-page="home"]) .page > *:not(.site-header){
-  animation: page-in .55s ease-out both;
+body:not([data-page="home"]) .page > .vectors,
+body:not([data-page="home"]) .work-wrap > .tile,
+body:not([data-page="home"]) .work-row-split > *,
+body:not([data-page="home"]) .work-row-pair > *,
+body:not([data-page="home"]) .about-grid > *,
+body:not([data-page="home"]) .contact-block > *,
+body:not([data-page="home"]) .project-intro > *,
+body:not([data-page="home"]) .project > .figma-link,
+body:not([data-page="home"]) .project-section > *,
+body:not([data-page="home"]) .project > .project-back{
+  animation: page-in .8s ease-out both;
+  animation-delay: var(--fade-delay, 0s);
 }
 
 /* Motion is the whole point of this, so reduced motion drops it entirely
    rather than shortening it. The default state is already opacity 1. */
 @media (prefers-reduced-motion: reduce){
-  body:not([data-page="home"]) .page > *:not(.site-header){ animation:none; }
+  body:not([data-page="home"]) .page > .vectors,
+  body:not([data-page="home"]) .work-wrap > .tile,
+body:not([data-page="home"]) .work-row-split > *,
+body:not([data-page="home"]) .work-row-pair > *,
+  body:not([data-page="home"]) .about-grid > *,
+  body:not([data-page="home"]) .contact-block > *,
+  body:not([data-page="home"]) .project-intro > *,
+  body:not([data-page="home"]) .project > .figma-link,
+  body:not([data-page="home"]) .project-section > *,
+  body:not([data-page="home"]) .project > .project-back{ animation:none; }
 }
 
 @media (max-width:1024px){

@@ -663,31 +663,52 @@ back after images; every other page's copy comes before them, or uses
 
 ## The subpage fade-in
 
-Every page but home fades its content up on load: one `page-in` keyframe,
-0.55s ease-out, on `.page > *:not(.site-header)`. Same duration, no delay
-between them, so the elements arrive together instead of cascading. Home
-is excluded — it has its own intro, where the vectors fly in and the
-plates rise — and the header is excluded on purpose, so the name and nav
-are already in place when the page under them appears. In practice the
-selector hits `.vectors` and `main`.
+Every page but home fades its content in as a sweep down the page. One
+`page-in` keyframe, 0.8s ease-out; the delay is set per block by
+`fadeSweep()` in `js/main.js` from the block's own vertical position, so
+it reads as a single pass from the top rather than a list arriving in DOM
+order. `FADE_SPREAD` (380ms) is how long the sweep takes to cross one
+screen; everything past the first screen shares the last delay, since
+nobody is watching it arrive.
+
+The delay is measured from the topmost animated block, not the top of the
+document — otherwise the header's height is dead time and nothing moves
+for the first tenth of a second. Home is excluded; it has its own intro.
+The header is excluded on purpose, so the name and nav are already in
+place when the page under them appears.
+
+**`FADE_SEL` must stay flat** — no element in it an ancestor of another.
+Fading a block inside a faded block multiplies the two opacities, which
+muddies the timing. That is why the list names `.project-intro > *` and
+`.project-section > *` rather than `.project > *`, and the work tiles
+rather than the rows that hold them. The same selector list is in the
+stylesheet; change one and change the other.
 
 **Opacity only, and it has to stay that way.** A translate would start the
 content off its resting place, and on about and contact the layout is
 solved to fill the window exactly, so a downward one is that many pixels
 of overflow and a scrollbar that flashes for half a second.
 
-`animation-fill-mode: both` puts the from-state in before the first paint,
-so there is no flash of unfaded content. Reduced motion drops the
-animation entirely rather than shortening it; the default state is already
-opacity 1, so the content is simply there.
+The CSS carries the animation and `animation-delay: var(--fade-delay, 0s)`
+defaults it to zero, so the script only ever *adds* the stagger: if it
+never runs the blocks simply fade in together, and nothing is ever left
+invisible. `animation-fill-mode: both` puts the from-state in before the
+first paint, so there is no flash either way. Reduced motion drops the
+animation rather than shortening it.
+
+`fadeSweep` runs once, after `paintVectors`, because the contact rhythm
+that sets moves the blocks it measures. Do not re-run it on resize: it
+would restart the animation and fade the page in a second time.
 
 **Do not measure this in a hidden tab.** Chrome does not advance an
 animation's timeline while `document.visibilityState` is `hidden` — the
 animation reads as `running` with `currentTime` stuck at 0, and with the
 fill in place the content computes to opacity 0. That looks exactly like a
 page that never fades in and is not. To check the interpolation without a
-visible tab, set `currentTime` on the animation by hand and read the
-computed opacity back.
+visible tab, set `currentTime` on the animations by hand and read the
+computed opacity back. Read it off an element that is actually in
+`FADE_SEL`: a child of one inherits the fade visually but its own computed
+opacity stays 1, which reads as though it never faded.
 
 ## Also open
 
