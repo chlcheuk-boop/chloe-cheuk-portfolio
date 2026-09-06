@@ -583,18 +583,33 @@ The ten UI snapshots are perfectly regular: x 328, w 2294, h 1311, at
 y 15430 then 16934 + n*1500. The four lo-fi wireframes are in two columns
 at x 222 and x 1488.
 
-**Resolution.** The snapshots are embedded in the PDF as 3024 x 1724
-rasters placed into 2294 x 1311pt boxes, so their native scale is 1.318
-px/pt; they are exported at 3024 wide, 1:1, with no resampling at all. The
-wireframes and the colour board are vector in the PDF and go out at 2400.
-The two competitor shots and the Crumbl reference are raster at 1600, 2048
-and 800 — exported at exactly those widths and never above them, since
-upsampling a raster only costs bytes. This is the one place on the site
-that breaks the 2000px convention, and deliberately.
+**Resolution, and where each image comes from.** The eight UI snapshots are
+Chloe's own PNGs, 3024 x 1640, dropped in as-is — not from the PDF, and
+kept as PNG rather than re-encoded to JPEG, since a lossless screenshot of
+small UI text is the same weight as a JPEG of it and none of the badge
+edges ring. `supplychain-01` and `11..17`; `images/supply-chain.png` is a
+copy of 01 for the tile, so `.h-supplychain` carries 3024/1640, the
+screenshot's own ratio, and `cover` crops nothing.
 
-To find a native size, scan the PDF bytes for `/Subtype /Image` and read
-the `/Width` and `/Height` out of the enclosing dictionary; match a region
-to its raster by aspect ratio.
+Everything else still comes out of the PDF, at its native size:
+
+- `02..05` (lo-fi wireframes) and `08` (colour board) are vector in the
+  PDF, exported at 2400
+- `06`, `07` (competitor shots) and `09` (Crumbl reference) are raster at
+  1600, 2048 and 800 — exported at exactly those widths and never above
+  them, since upsampling a raster only costs bytes
+- `10` (logo) is vector, 2000 wide
+
+To find a raster's native size, scan the PDF bytes for `/Subtype /Image`
+and read `/Width` and `/Height` out of the enclosing dictionary; match a
+region to its raster by aspect ratio. The PDF's own versions of the
+snapshots were 3024 x 1724 at x 328, w 2294, h 1311, y 15430 then
+16934 + n*1500 — worth knowing if they are ever wanted again. Two of them
+(the plain ingredients table and a second search state) have no
+counterpart in Chloe's set and were dropped rather than mixed in at a
+different aspect ratio.
+
+This page is the one that breaks the site's 2000px convention.
 
 **The `white` flag.** The logo lockup (`supplychain-10`) is black line art
 sitting on the page's grey ground, so a straight crop is a grey block on a

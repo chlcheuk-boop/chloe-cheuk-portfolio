@@ -269,7 +269,7 @@ a{ color:inherit; }
 .h-sebiowomens { aspect-ratio: 1372 / 771;  }
 .h-sebiocube   { aspect-ratio: 1372 / 1060; }
 .h-glitched    { aspect-ratio: 1372 / 857;  }
-.h-supplychain { aspect-ratio: 1372 / 784;  }
+.h-supplychain { aspect-ratio: 3024 / 1640; }   /* the screenshot's own pixels */
 
 /* feature 6 — cursor-following caption. The outer node carries the
    (untransitioned) translate so it tracks the cursor exactly; the inner
