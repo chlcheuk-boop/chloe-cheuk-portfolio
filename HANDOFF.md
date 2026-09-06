@@ -564,6 +564,18 @@ LinkedIn caches a preview per URL for around a week; its Post Inspector
 
 ## The supply chain page came from a PDF, not the .fig
 
+**It is currently unlinked.** Chloe asked for it off the work page for
+now, so the tile is gone but nothing else is: the page, its seventeen
+images, `.h-supplychain` and the `.brief-row` rules all stay. It is still
+live at `/work-supply-chain/`, just not reachable from the grid. To put it
+back, paste the tile in as the last child of `.work-wrap`:
+
+```html
+<a class="tile tile-full h-supplychain" href="../work-supply-chain/" data-project="Schumbl Schmookies — Supply Chain Console" data-roles="UI/UX, Branding, Prototyping">
+  <img src="../images/supply-chain.png" alt="The Schumbl Schmookies supply chain console dashboard, with risk leaderboards by vendor, store and ingredient." loading="lazy" decoding="async">
+</a>
+```
+
 `work-supply-chain/` is the tenth project page and the only one not built
 from a Figma frame. Its source is `~/Downloads/Cookie Supply Chain Process
 and Result (1).pdf`, which is **one page, 2988 x 30619pt** — an exported
