@@ -611,6 +611,25 @@ a{ color:inherit; }
   gap: var(--vstep);
   grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
 }
+/* The design brief's three answers, side by side. Its own grid rather
+   than .img-row: grid stretches the cells, so the three read as one band
+   whatever their text runs to, and the plate ties them to the nav plate
+   and the status chips. Collapses to a column with everything else at
+   1024. */
+.brief-row{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vstep);
+  margin: 0 0 var(--vstep);
+}
+.brief-card{
+  background: var(--plate);
+  border-radius: var(--radius);
+  padding: calc(26 * var(--u));
+}
+.brief-card p{ margin:0; }
+.brief-card p + p{ margin-top: calc(10 * var(--u)); }
+
 .img-row.cols-2{ --cols:2; }
 .img-row.cols-3{ --cols:3; }
 .img-row + .img-row{ margin-top: var(--vstep); }
@@ -709,6 +728,8 @@ a{ color:inherit; }
   .work-row-split, .work-row-pair{
     display:flex; flex-direction:column; gap: var(--gap);
   }
+  .brief-row{ grid-template-columns: minmax(0, 1fr); }
+  .brief-card{ padding: calc(16 * var(--u)); }
   .work-row-split .tall, .work-row-split .sq,
   .work-row-pair .tile, .work-row-pair > *,
   .h-bloodondot,.h-sebiowomens,.h-sebiocube,.h-glitched,

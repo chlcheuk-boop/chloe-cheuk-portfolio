@@ -628,6 +628,20 @@ to the margin and read as a new point, so each is wrapped in
 `<span class="ln">` — an inline block with a negative text-indent, which
 hangs the marker. `.ln--sub` adds the second level's indent.
 
+**The design brief's three answers** are `.brief-row`, a three-column grid
+of `.brief-card` plates that collapses to one column in the same 1024
+block as every other row on the site. Grid rather than flex on purpose:
+grid stretches the cells, so the three stay one even band however long
+their text runs. The plate colour and `--radius` are the nav plate's and
+the work tiles', so they read as part of the same set.
+
+Do not trust a headless mobile screenshot of this page. Chrome on this
+machine will not open a window narrower than about 500px, so
+`--window-size=390` lays the page out wider and then crops the capture to
+390 — which looks exactly like horizontal overflow and is not. Measure
+instead: `document.documentElement.scrollWidth - innerWidth`, plus a sweep
+for any element whose `right` exceeds `innerWidth`.
+
 **Copy after a row of images.** `.img-row` carries no bottom margin, so a
 `.project-lede` following one had only the paragraph's own collapsed 24px
 top margin against the 32 everything else sits on. `.img-row +
