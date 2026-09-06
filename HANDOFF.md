@@ -661,6 +661,34 @@ top margin against the 32 everything else sits on. `.img-row +
 back after images; every other page's copy comes before them, or uses
 `.project-caption`, which already has the margin.
 
+## The subpage fade-in
+
+Every page but home fades its content up on load: one `page-in` keyframe,
+0.55s ease-out, on `.page > *:not(.site-header)`. Same duration, no delay
+between them, so the elements arrive together instead of cascading. Home
+is excluded — it has its own intro, where the vectors fly in and the
+plates rise — and the header is excluded on purpose, so the name and nav
+are already in place when the page under them appears. In practice the
+selector hits `.vectors` and `main`.
+
+**Opacity only, and it has to stay that way.** A translate would start the
+content off its resting place, and on about and contact the layout is
+solved to fill the window exactly, so a downward one is that many pixels
+of overflow and a scrollbar that flashes for half a second.
+
+`animation-fill-mode: both` puts the from-state in before the first paint,
+so there is no flash of unfaded content. Reduced motion drops the
+animation entirely rather than shortening it; the default state is already
+opacity 1, so the content is simply there.
+
+**Do not measure this in a hidden tab.** Chrome does not advance an
+animation's timeline while `document.visibilityState` is `hidden` — the
+animation reads as `running` with `currentTime` stuck at 0, and with the
+fill in place the content computes to opacity 0. That looks exactly like a
+page that never fades in and is not. To check the interpolation without a
+visible tab, set `currentTime` on the animation by hand and read the
+computed opacity back.
+
 ## Also open
 
 - Fonts load from Google Fonts.

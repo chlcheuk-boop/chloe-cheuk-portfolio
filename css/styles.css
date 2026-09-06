@@ -658,6 +658,34 @@ a{ color:inherit; }
    1200 as well, but the only one is the JSA Instagram stories, which are
    meant to read as a set across the row on any desktop width. */
 
+/* ============================================================
+   PAGE FADE-IN  (every page but home)
+   ============================================================ */
+/* Home is left alone: it has its own intro, where the vectors fly in and
+   the plates rise. Everywhere else the content simply fades up.
+
+   One animation, one duration, no delay between them, so every element
+   arrives at the same moment rather than cascading. The header is
+   excluded and holds still — the name and nav are already in place when
+   the page under them appears.
+
+   Opacity only, deliberately. A translate would start the content 8px
+   off its resting place, which on about and contact — where the layout is
+   solved to fill the window exactly — is 8px of overflow and a scrollbar
+   that flashes for half a second. `both` puts the from-state in before
+   the first paint, so there is nothing to flash. */
+@keyframes page-in{ from{ opacity:0 } to{ opacity:1 } }
+
+body:not([data-page="home"]) .page > *:not(.site-header){
+  animation: page-in .55s ease-out both;
+}
+
+/* Motion is the whole point of this, so reduced motion drops it entirely
+   rather than shortening it. The default state is already opacity 1. */
+@media (prefers-reduced-motion: reduce){
+  body:not([data-page="home"]) .page > *:not(.site-header){ animation:none; }
+}
+
 @media (max-width:1024px){
   /* 1u tracks a 390-wide phone frame, capped so tablet-width windows
      don't balloon the type. Widths stay fluid (100%/auto). */
