@@ -507,6 +507,10 @@ a{ color:inherit; }
   --vstep: calc(32 * var(--u));
 }
 .project-title{ margin:0 0 var(--vstep); }
+/* The project name is the italic part. The skills after the dash are a
+   label on it, so they sit upright — .section-title is italic wholesale
+   and this is the one place that wants both. */
+.project-title .roles{ font-style:normal; }
 /* the software line sits in the same rhythm as everything else: one --vstep
    under the title, one --vstep above the copy, so adding it does not
    disturb the even spacing */

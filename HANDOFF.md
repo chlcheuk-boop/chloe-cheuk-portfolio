@@ -710,6 +710,20 @@ computed opacity back. Read it off an element that is actually in
 `FADE_SEL`: a child of one inherits the fade visually but its own computed
 opacity stays 1, which reads as though it never faded.
 
+## Project titles: name italic, skills upright
+
+`.section-title` is italic wholesale, and the project pages are the one
+place that wants both styles in one heading. The part after the dash is
+wrapped in `<span class="roles">`, which sets `font-style: normal`: the
+project name stays italic and the skills read as a label on it. The dash
+goes inside the span.
+
+Nine of the ten pages have one; `work-cla` has no dash and no roles, so it
+is left alone. `work-opencall` writes its dash as `&mdash;` rather than a
+literal one — match both if this is ever redone in bulk. Only the `<h2>`
+is touched: the `<title>` and `og:title` carry their own " &mdash; Chloe
+Cheuk" suffix, which is not a roles clause.
+
 ## Notes between the boards
 
 Blood on Dot, Sebio Women's Health and the Pain Cube each carry Chloe's
