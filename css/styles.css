@@ -603,6 +603,30 @@ a{ color:inherit; }
 .project-section > .section-title{ margin: 0 0 var(--vstep); }
 .project-caption{ margin: var(--vstep) 0 0; }
 
+/* A note set between two boards — the part of the story the images do not
+   tell. Boxed so it reads as an aside in the run of images rather than a
+   caption belonging to the board above or below it, and outlined rather
+   than filled: two or three filled plates stacked down a column would
+   outweigh the boards they sit between.
+
+   Margin on both sides, so it picks up the same --vstep whichever way it
+   meets a row — .img-row has no margin of its own except after another
+   .img-row, and adjacent margins collapse to the larger. */
+.project-note{
+  margin: var(--vstep) 0;
+  padding: calc(26 * var(--u));
+  border: max(1px, calc(1 * var(--u))) solid var(--divider);
+  border-radius: var(--radius);
+}
+.project-note h4{
+  margin: 0 0 calc(10 * var(--u));
+  font-family: var(--sans);
+  font-size: calc(24 * var(--u));
+  font-weight: 600;
+  line-height: 1.28;
+}
+.project-note p{ margin: 0; }
+
 /* A row of images. Every cell is one equal fraction and every image fills
    its cell, so the images share a width whatever their proportions are,
    and height:auto keeps each one's aspect ratio. */
@@ -786,6 +810,8 @@ body:not([data-page="home"]) .work-row-pair > *,
   }
   .brief-row{ grid-template-columns: minmax(0, 1fr); }
   .brief-card{ padding: calc(16 * var(--u)); }
+  .project-note{ padding: calc(16 * var(--u)); }
+  .project-note h4{ font-size: calc(15 * var(--u)); }
   .work-row-split .tall, .work-row-split .sq,
   .work-row-pair .tile, .work-row-pair > *,
   .h-bloodondot,.h-sebiowomens,.h-sebiocube,.h-glitched,

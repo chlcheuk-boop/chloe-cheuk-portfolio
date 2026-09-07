@@ -710,6 +710,30 @@ computed opacity back. Read it off an element that is actually in
 `FADE_SEL`: a child of one inherits the fade visually but its own computed
 opacity stays 1, which reads as though it never faded.
 
+## Notes between the boards
+
+Blood on Dot, Sebio Women's Health and the Pain Cube each carry Chloe's
+own account of the project set in `.project-note` boxes between the image
+rows — Ideation, User Research, User Testing. They are spread out on
+purpose: no two sit in the same gap, and they run in the order she wrote
+them, which is also the order the work happened in.
+
+Outlined rather than filled. Two or three filled plates stacked down a
+column outweigh the boards they sit between, and the boards are the point
+of the page.
+
+`.project-note` carries `margin: var(--vstep) 0` on both sides. `.img-row`
+has no margin of its own except after another `.img-row`, and adjacent
+margins collapse to the larger, so the note picks up the same 32 whichever
+way it meets a row. Being a child of `.project-section` it is already in
+`FADE_SEL`, so it joins the sweep without anything extra.
+
+Three slips were fixed in the copy she supplied, and only these three:
+"nonprofits in the Houston" to "in Houston", "how it illustrations would
+benefit" to "how illustrations would benefit", and "told me that that the
+Pain Cube" to "told me that the Pain Cube". Everything else is her wording
+untouched — see the note on the supply chain page about not paraphrasing.
+
 ## Also open
 
 - Fonts load from Google Fonts.
