@@ -715,8 +715,10 @@ opacity stays 1, which reads as though it never faded.
 Blood on Dot, Sebio Women's Health and the Pain Cube each carry Chloe's
 own account of the project set in `.project-note` boxes between the image
 rows — Ideation, User Research, User Testing. They are spread out on
-purpose: no two sit in the same gap, and they run in the order she wrote
-them, which is also the order the work happened in.
+purpose — no two sit in the same gap — and they run in the order she wrote
+them, which is also the order the work happened in. The exact gaps are
+Chloe's call, not a rule: on Blood on Dot she asked for Ideation after
+branding and User Testing between process and accessibility.
 
 Outlined rather than filled. Two or three filled plates stacked down a
 column outweigh the boards they sit between, and the boards are the point
