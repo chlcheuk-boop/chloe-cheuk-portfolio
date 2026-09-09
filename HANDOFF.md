@@ -518,7 +518,7 @@ with a broken source, so measuring the box proves nothing.
 
 Every page except the home one lives in a directory of its own —
 `about/index.html`, `work/index.html`, `work-mfah/index.html` — so it is
-served at `/about/`, `/work/`, `/work-mfah/`. GitHub Pages has no rewrite
+served at `/about/`, `/work/`, `/work-mfah/`. Static hosting has no rewrite
 rules, so a directory with an index is the only way to drop the extension
 that does not depend on host behaviour; it also works under the local
 `serve.py`, which is what let it be checked here.
@@ -548,16 +548,8 @@ before the shot; without it the shapes are caught mid-flight. Re-run it if
 the home composition changes.
 
 **The URLs are absolute and hardcoded**, because a relative `og:image` is
-ignored outright by every scraper. They currently read
-
-    https://chlcheuk-boop.github.io/chloe-cheuk-portfolio
-
-which is the GitHub Pages default for this repo. **Pages was not enabled
-when this was written** — the API and the .github.io URL both 404 — so the
-preview cannot resolve until it is turned on, or until the URLs are pointed
-at wherever the site actually lives:
-
-    grep -rl chlcheuk-boop.github.io *.html | xargs sed -i '' 's|https://chlcheuk-boop.github.io/chloe-cheuk-portfolio|https://YOUR-DOMAIN|g'
+ignored outright by every scraper. They read `https://chloe-cheuk.com` —
+see the hosting section below for how to move them.
 
 LinkedIn caches a preview per URL for around a week; its Post Inspector
 (linkedin.com/post-inspector) forces a re-scrape after a change.
@@ -749,6 +741,34 @@ Three slips were fixed in the copy she supplied, and only these three:
 benefit" to "how illustrations would benefit", and "told me that that the
 Pain Cube" to "told me that the Pain Cube". Everything else is her wording
 untouched — see the note on the supply chain page about not paraphrasing.
+
+## Hosting: Vercel, not GitHub Pages
+
+The site is deployed by **Vercel** at `https://chloe-cheuk.com`
+(`server: Vercel` on every response). GitHub Pages still exists for the
+repo and 301s `chlcheuk-boop.github.io/chloe-cheuk-portfolio` to the custom
+domain. `www` 307s to the apex. The `.nojekyll` and `CNAME` files are
+GitHub Pages leftovers — harmless, and `CNAME` still documents the domain.
+
+**A push to `main` is the deploy.** Nothing is live until it is pushed.
+
+`vercel.json` sets two things:
+
+- `trailingSlash: true`. Vercel served every page at three URLs at once —
+  `/about`, `/about/` and `/about/index.html` all returned 200 — which is
+  three copies of every page as far as a crawler is concerned. Now the
+  no-slash form 308s to the slash form. Every internal link, every
+  `<loc>` in the sitemap and every canonical already used the slash form,
+  so this redirects nothing the site itself asks for.
+- A day of caching plus a week of `stale-while-revalidate` on
+  `/images/*`, `/css/*` and `/js/*`. Everything was
+  `max-age=0, must-revalidate`, so 31MB of images revalidated on every
+  view. A day rather than a year on purpose: image filenames are not
+  content-hashed, so replacing one in place must not strand it in caches.
+
+`/about/index.html` still answers 200 — the canonical tag handles it, and
+nothing links to it. A redirect rule for it is easy to get into a loop
+alongside `trailingSlash`, and was not worth the risk.
 
 ## SEO and how the site is addressed
 
