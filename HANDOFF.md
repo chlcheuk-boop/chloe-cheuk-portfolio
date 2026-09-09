@@ -750,6 +750,50 @@ benefit" to "how illustrations would benefit", and "told me that that the
 Pain Cube" to "told me that the Pain Cube". Everything else is her wording
 untouched — see the note on the supply chain page about not paraphrasing.
 
+## SEO and how the site is addressed
+
+The site is live at **https://chloe-cheuk.com** (the `CNAME`), and
+`chlcheuk-boop.github.io/chloe-cheuk-portfolio` 301s to it. Every absolute
+URL in the markup — `og:url`, `og:image`, `twitter:image`, `canonical`,
+the sitemap, the JSON-LD `@id`s — points at the custom domain. They used
+to point at the github.io path, which meant every preview image was a
+redirect, and scrapers are unreliable about following those. If the domain
+ever changes, change all of it:
+
+    grep -rl chloe-cheuk.com . | xargs sed -i '' 's|https://chloe-cheuk.com|https://NEW|g'
+
+Relative paths are still used for everything the page itself loads (css,
+js, images, favicon), so the site keeps working from any path.
+
+**Per page:** a `canonical`, `author`, and `robots: index, follow,
+max-image-preview:large, max-snippet:-1` — the large-image directive is
+what lets an image-led portfolio show a real thumbnail in results.
+
+**Previews:** each project page uses its own hero as `og:image`, with that
+file's real pixel dimensions, so a shared project link shows that project.
+Home, about, work and contact still use `images/preview.png`.
+
+**Structured data:** one `Person` (`@id` `…/#chloe`) repeated on every page
+and referenced by `@id` from the rest, so every page resolves to the same
+entity. Home adds `WebSite`, about `AboutPage`, contact `ContactPage`, work
+a `CollectionPage` holding an `ItemList` of the nine linked projects, and
+each project page a `CreativeWork` whose `keywords` are its own roles and
+whose `creator`/`author` point at the Person. `affiliation` is used for
+Penn rather than `alumniOf`, because she is currently enrolled.
+
+**`sameAs` has only Instagram.** A LinkedIn URL is the single strongest
+addition here — it is how a recruiter's search resolves a name to a person
+— and is worth adding the moment it is to hand.
+
+**`robots.txt` and `sitemap.xml`** are at the root. The sitemap has 13 of
+the 14 pages: `work-supply-chain` is off the work page for now, so it is
+left out rather than volunteered to a crawler. Put it back in the sitemap
+when the tile goes back on the grid.
+
+**Favicon** is `favicon.svg`, the site's own starburst on white, with
+`apple-touch-icon.png` at 180px rendered from it. Google shows a favicon
+beside mobile results, so a missing one costs a little trust.
+
 ## Also open
 
 - Fonts load from Google Fonts.
