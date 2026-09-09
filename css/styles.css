@@ -630,6 +630,10 @@ a{ color:inherit; }
   line-height: 1.28;
 }
 .project-note p{ margin: 0; }
+/* A note that is not inside a section sits between two of them, so it
+   takes the section's own gap on top; the 96 below comes from the next
+   section's margin collapsing with its 32. */
+.project > .project-note{ margin-top: calc(var(--vstep) * 3); }
 
 /* A row of images. Every cell is one equal fraction and every image fills
    its cell, so the images share a width whatever their proportions are,
@@ -721,6 +725,7 @@ body:not([data-page="home"]) .about-grid > *,
 body:not([data-page="home"]) .contact-block > *,
 body:not([data-page="home"]) .project-intro > *,
 body:not([data-page="home"]) .project > .figma-link,
+body:not([data-page="home"]) .project > .project-note,
 body:not([data-page="home"]) .project-section > *,
 body:not([data-page="home"]) .project > .project-back{
   animation: page-in .8s ease-out both;
@@ -738,6 +743,7 @@ body:not([data-page="home"]) .work-row-pair > *,
   body:not([data-page="home"]) .contact-block > *,
   body:not([data-page="home"]) .project-intro > *,
   body:not([data-page="home"]) .project > .figma-link,
+body:not([data-page="home"]) .project > .project-note,
   body:not([data-page="home"]) .project-section > *,
   body:not([data-page="home"]) .project > .project-back{ animation:none; }
 }

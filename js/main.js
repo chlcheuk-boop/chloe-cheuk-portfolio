@@ -567,6 +567,7 @@
   var FADE_SEL = '.page > .vectors, .about-grid > *, .contact-block > *, ' +
                  '.work-wrap > .tile, .work-row-split > *, .work-row-pair > *, ' +
                  '.project-intro > *, .project > .figma-link, ' +
+                 '.project > .project-note, ' +
                  '.project-section > *, .project > .project-back';
   /* how long the sweep takes to travel one screen */
   var FADE_SPREAD = 380;

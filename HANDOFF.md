@@ -730,6 +730,17 @@ Outlined rather than filled. Two or three filled plates stacked down a
 column outweigh the boards they sit between, and the boards are the point
 of the page.
 
+Three pages carry a **Design Choices** note instead — opencall, cla and
+design-club — because their rationale was buried in the body copy rather
+than told alongside the boards. Two of those pages have no `.project-section`
+around the passage: opencall's sits inside `.project-intro`, and cla's is a
+direct child of `.project` between the intro and the Marketing section.
+`.project > .project-note` therefore takes `margin-top: var(--vstep) * 3`,
+so it reads at the section rhythm — 96 above and 96 below — rather than 32
+above and 96 below; and it had to be added to `FADE_SEL` in both the
+stylesheet and `main.js`, since the existing entries only reach notes
+inside a section or an intro.
+
 `.project-note` carries `margin: var(--vstep) 0` on both sides. `.img-row`
 has no margin of its own except after another `.img-row`, and adjacent
 margins collapse to the larger, so the note picks up the same 32 whichever
