@@ -376,7 +376,10 @@ a{ color:inherit; }
   position:absolute;
   width: calc(599 * var(--au));
   height:calc(599 * var(--au));
-  right:  calc(-265 * var(--au));
+  /* the original position, nudged 30px right. A real 30px rather than
+     30 --au: --au runs about 0.85px at 1440x900, so 30 of them would
+     come out near 26. */
+  right:  calc(-225 * var(--au) - 30px);
   bottom: calc(-268 * var(--au));
   z-index:2;
   pointer-events:none;
